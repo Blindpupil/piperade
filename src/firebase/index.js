@@ -15,4 +15,4 @@ export const auth = firebase.auth()
 
 // Firestore
 const db = firebase.firestore()
-export const usersRef = db.collection('users')
+export const usersColRef = db.collection('users') // reference of Users collection
