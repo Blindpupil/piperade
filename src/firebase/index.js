@@ -6,13 +6,26 @@ import config from '@/firebase/config'
 // Shtaart
 firebase.initializeApp(config)
 
-const firestore = firebase.firestore()
-const settings = { timestampsInSnapshots: true }
-firestore.settings(settings)
-
-// Auth function
-export const auth = firebase.auth()
-
 // Firestore
 const db = firebase.firestore()
-export const usersRef = db.collection('users')
+
+const settings = { timestampsInSnapshots: true }
+db.settings(settings)
+
+// Delete field function
+export const deleteField = () => firebase.firestore.FieldValue.delete()
+
+// Auth
+export const auth = firebase.auth()
+const currentUser = 'user1' // (TODO)
+
+
+/*
+  REFERENCES
+*/
+// reference of Users collection
+export const usersColRef = db.collection('users')
+// reference of Recipes collection
+export const recipesColRef = usersColRef.doc(currentUser).collection('recipes')
+// reference of Pantry document
+export const pantryDocRef = usersColRef.doc(currentUser).collection('eadables').doc('pantry')

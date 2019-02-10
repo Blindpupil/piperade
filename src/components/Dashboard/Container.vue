@@ -20,29 +20,31 @@
         </v-list-tile>
       </v-list>
     </v-navigation-drawer>
+
     <v-toolbar app fixed clipped-left>
       <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
-      <v-toolbar-title>Application</v-toolbar-title>
+      <v-toolbar-title>Piperade.</v-toolbar-title>
     </v-toolbar>
 
     <v-content>
       <v-container fluid fill-height>
-        <v-layout justify-center align-center>
-          <v-flex shrink>
-
-          </v-flex>
+        <v-layout justify-center>
+          <router-view></router-view>
         </v-layout>
       </v-container>
     </v-content>
 
-    <v-footer app fixed>
-      <span>&copy; 2019</span>
-    </v-footer>
+    <BottomNav></BottomNav>
   </v-app>
 </template>
 
 <script>
+import BottomNav from '@/components/molecules/BottomNav.vue'
+
 export default {
+  components: {
+    BottomNav
+  },
   data: () => ({
     drawer: true
   })
