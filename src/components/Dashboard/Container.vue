@@ -20,6 +20,7 @@
         </v-list-tile>
       </v-list>
     </v-navigation-drawer>
+
     <v-toolbar app fixed clipped-left>
       <v-toolbar-side-icon @click.stop="drawer = !drawer"></v-toolbar-side-icon>
       <v-toolbar-title>Piperade.</v-toolbar-title>
@@ -27,34 +28,22 @@
 
     <v-content>
       <v-container fluid fill-height>
-        <v-layout justify-center align-center>
-          <v-flex shrink>
-            Welcome to Piperade.
-            The smart keeper for your recipes and groceries.
-            <AddRecipeDialogs>
-              <v-btn class="primary">Add recipe</v-btn>
-            </AddRecipeDialogs>
-          </v-flex>
+        <v-layout justify-center>
+          <router-view></router-view>
         </v-layout>
       </v-container>
     </v-content>
 
-    <v-footer app fixed>
-      <span>&copy; 2019</span>
-    </v-footer>
+    <BottomNav></BottomNav>
   </v-app>
 </template>
 
 <script>
-import AddRecipeDialogs from '@/components/organisms/AddRecipeDialogs.vue'
-import { GET_CUPBOARDS } from '@/store/types/action_types'
+import BottomNav from '@/components/molecules/BottomNav.vue'
 
 export default {
   components: {
-    AddRecipeDialogs
-  },
-  created() {
-    this.$store.dispatch(GET_CUPBOARDS)
+    BottomNav
   },
   data: () => ({
     drawer: true

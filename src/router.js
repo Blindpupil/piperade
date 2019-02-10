@@ -22,8 +22,25 @@ export default new Router({
     },
     {
       path: '/dashboard',
-      name: 'dashboard',
-      component: () => import('@/views/Dashboard.vue')
+      component: () => import('@/views/Dashboard.vue'),
+      children: [
+        {
+          path: '/',
+          component: () => import('@/components/Dashboard/Recipes.vue')
+        },
+        {
+          path: 'pantry',
+          component: () => import('@/components/Dashboard/Pantry.vue')
+        },
+        {
+          path: 'lists',
+          component: () => import('@/components/Dashboard/Lists.vue')
+        },
+        {
+          path: 'calendar',
+          component: () => import('@/components/Dashboard/Calendar.vue')
+        }
+      ]
     }
   ]
 })

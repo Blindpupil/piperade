@@ -46,7 +46,7 @@
       </v-card>
     </v-dialog>
 
-    <!-- RECIPE INGREDIENTS AND PANTRY DIALOG -->
+    <!-- RECIPE INGREDIENTS AND PORTIONS DIALOG -->
     <v-dialog
       v-model="recipeDialog"
       fullscreen
@@ -77,55 +77,8 @@
                   </AddIngredientDialog>
                 </v-subheader>
 
-                <p v-if="ingredients.length === 0" class="ma-4">
-                  You haven't added any ingredients yet...
-                </p>
-
                 <!-- Ingredients list view -->
-                <template v-for="(ingredient, index) in ingredients">
-                  <v-layout row :key="index" align-center>
-                    <v-flex xs1>
-                      <EditIngredientDialog>
-                        <v-icon @click="editIngredient(ingredient, index)">
-                          edit
-                        </v-icon>
-                      </EditIngredientDialog>
-                    </v-flex>
-
-                    <v-flex xs11>
-                      <v-list two-line>
-                        <v-list-tile
-                          :key="ingredient.ingredient"
-                          avatar
-                          ripple
-                          @click="toggle(index)"
-                        >
-                          <v-list-tile-content>
-                            <v-list-tile-title>{{ ingredient.ingredient }}</v-list-tile-title>
-                            <v-list-tile-sub-title v-if="ingredient.substitute">
-                              Or {{ ingredient.substitute }}
-                            </v-list-tile-sub-title>
-                          </v-list-tile-content>
-
-                          <v-list-tile-action>
-                            <v-list-tile-action-text>
-                              {{ ingredient.quantity }} {{ ingredient.unit }}
-                            </v-list-tile-action-text>
-                            <v-icon v-if="selected.indexOf(index) < 0" color="grey lighten-1">
-                              radio_button_unchecked
-                            </v-icon>
-
-                            <v-icon v-else color="green lighten-3">
-                              check_circle
-                            </v-icon>
-                          </v-list-tile-action>
-                        </v-list-tile>
-                      </v-list>
-                    </v-flex>
-
-                    <v-divider v-if="index + 1 < ingredients.length" :key="index"></v-divider>
-                  </v-layout>
-                </template>
+                <IngredientsList @added:cupboard="toggleAlert"> </IngredientsList>
               </v-flex>
 
               <v-flex align-self-start class="w100">
@@ -157,10 +110,10 @@
         </v-alert>
 
         <v-alert
-          v-model="haveItmsg"
+          v-model="addedCupboard"
           transition="slide-y-reverse-transition"
-          dismissible
           type="success"
+          dismissible
           outline
         >
           We'll note that you already have this ingredient!
@@ -242,28 +195,32 @@
 <script>
 import { isEmpty } from 'lodash-es'
 import { mapGetters, mapMutations } from 'vuex'
+
 import CategoriesBox from '@/components/molecules/CategoriesBox.vue'
+import IngredientsList from '@/components/molecules/IngredientsList.vue'
+
 import AddIngredientDialog from '@/components/organisms/AddIngredientDialog.vue'
-import EditIngredientDialog from '@/components/organisms/EditIngredientDialog.vue'
-import { WRITE_CUPBOARDS, WRITE_RECIPE } from '@/store/types/action_types'
-import { SET_INGREDIENT_EDIT, SET_RECIPE_NAME } from '@/store/types/mutation_types'
+
+import { WRITE_RECIPE } from '@/store/types/action_types'
+import { SET_RECIPE_NAME } from '@/store/types/mutation_types'
+
 
 export default {
   components: {
     AddIngredientDialog,
-    EditIngredientDialog,
-    CategoriesBox
-  },
-  computed: {
-    ...mapGetters(['ingredients', 'recipeName', 'categories'])
+    CategoriesBox,
+    IngredientsList
   },
   created() {
     if (!isEmpty(this.recipeName)) this.name = this.recipeName
   },
+  computed: {
+    ...mapGetters(['ingredients', 'recipeName', 'categories'])
+  },
   data() {
     return {
       alert: false,
-      haveItmsg: false,
+      addedCupboard: false,
       name: '',
       nameDialog: false,
       nameRules: [
@@ -276,17 +233,14 @@ export default {
       ],
       validName: false,
       recipeDialog: false,
-      selected: [],
       detailsDialog: false,
       instructions: '',
-      pantry: [],
       photo: ''
     }
   },
   methods: {
     ...mapMutations({
-      setName: SET_RECIPE_NAME,
-      setIngredientEdit: SET_INGREDIENT_EDIT
+      setName: SET_RECIPE_NAME
     }),
     validateName() {
       if (this.$refs.nameForm.validate()) {
@@ -295,30 +249,25 @@ export default {
         this.recipeDialog = true
       }
     },
-    editIngredient(ingredient, index) {
-      this.setIngredientEdit({ ...ingredient, index })
-    },
     goToPreviousDialog() {
       this.recipeDialog = !this.recipeDialog
-    },
-    toggle(index) {
-      const i = this.selected.indexOf(index)
-
-      if (i > -1) {
-        this.selected.splice(i, 1)
-      } else {
-        this.selected.push(index)
-        this.haveItmsg = true
-        setTimeout(() => { this.haveItmsg = false }, 4000)
-      }
     },
     continueToDetails() {
       if (!isEmpty(this.ingredients)) {
         this.detailsDialog = true
       } else {
         this.alert = true
-        setTimeout(() => { this.alert = false }, 4000)
+        setTimeout(() => { this.alert = false }, 3500)
       }
+    },
+    toggleAlert() {
+      this.addedCupboard = true
+      setTimeout(() => { this.addedCupboard = false }, 4000)
+    },
+    close() {
+      this.detailsDialog = false
+      this.recipeDialog = false
+      this.nameDialog = false
     },
     save() {
       const recipe = {
@@ -330,17 +279,8 @@ export default {
         photo: this.photo
       }
 
-      const cupboards = []
-
-      this.selected.forEach((i) => {
-        const ingredient = this.ingredients[i]
-        delete ingredient.substitute
-        cupboards.push(ingredient)
-      })
-
-      if (!isEmpty(cupboards)) this.$store.dispatch(WRITE_CUPBOARDS, cupboards)
-
       this.$store.dispatch(WRITE_RECIPE, recipe)
+      this.close()
     }
   }
 }

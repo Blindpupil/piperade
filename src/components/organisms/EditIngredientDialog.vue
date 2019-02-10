@@ -1,9 +1,8 @@
 <template>
   <v-dialog
     v-model="editDialog"
-    fullscreen
-    hide-overlay
     transition="dialog-bottom-transition"
+    persistent
   >
     <slot slot="activator"></slot>
 
@@ -12,7 +11,7 @@
         <v-btn icon @click="goToPreviousDialog">
           <v-icon>arrow_back</v-icon>
         </v-btn>
-        <v-toolbar-title>Editing {{ingredient}} in "{{recipeName}}"</v-toolbar-title>
+        <v-toolbar-title>Editing {{ingredient}} in {{recipeName}}</v-toolbar-title>
       </v-toolbar>
 
       <v-card-text>
@@ -25,6 +24,8 @@
                   :rules="ingredientRules"
                   :placeholder="ingredientsList[0]"
                   :items="ingredientsList"
+                  @input.native="handleChange"
+                  name="ingredient"
                   label="Select ingredient or create a new one"
                 ></v-combobox>
 
@@ -46,10 +47,13 @@
 
                 <v-combobox
                   class="font-weight-light"
-                  v-model="substituteIngredient"
+                  v-model="substitute"
+                  name="substitute"
+                  @input.native="handleChange"
                   :rules="substituteIngredientRules"
                   :items="ingredientsList"
-                  :label="`If you can't find ${ingredient}, is there any replacements?`"
+                  :placeholder="`If you can't find ${ingredient}...`"
+                  label="Substitute"
                 ></v-combobox>
               </v-form>
             </v-flex>
@@ -57,7 +61,7 @@
         </v-container>
       </v-card-text>
 
-      <v-card-actions>
+      <v-card-actions style="padding: 16px 32px">
         <v-btn color="error" @click="deleteIngredient"> Delete </v-btn>
         <v-spacer></v-spacer>
         <v-btn color="primary" @click="validateIngredient"> Edit </v-btn>
@@ -84,14 +88,13 @@ export default {
     quantityRules: [
       v => v > 0 || 'Gotta be a number bigger than 0'
     ],
-    unitsList: ['cloves', 'units', 'cl', 'g', 'k', 'l', 'lbs', 'ml', 'oz'],
     substituteIngredientRules: [
       v => v.length <= 20 || 'Ingredient name must be less than 20 characters'
     ],
     validIngredient: false
   }),
   computed: {
-    ...mapGetters(['editIngredientDialog', 'recipeName', 'ingredientEdit']),
+    ...mapGetters(['recipeName', 'ingredientEdit', 'unitsList']),
     ingredient: {
       get() {
         return (isEmpty(this.ingredientEdit.ingredient))
@@ -122,7 +125,7 @@ export default {
         this.data.unit = newValue
       }
     },
-    substituteIngredient: {
+    substitute: {
       get() {
         return (isEmpty(this.ingredientEdit.substitute))
           ? ''
@@ -140,20 +143,22 @@ export default {
     goToPreviousDialog() {
       this.editDialog = false
     },
+    handleChange(e) {
+      if (!isEmpty(e)) {
+        const newValue = e.srcElement.value
+        const property = e.srcElement.name
+
+        this.data[property] = newValue
+      }
+    },
     validateIngredient() {
       if (this.$refs.editIngredientForm.validate()) {
         this.snackbar = true
 
         const newIngredient = {
           ingredient: {
-            ingredient: this.data.ingredient
-              ? this.data.ingredient
-              : this.ingredientEdit.ingredient,
-            quantity: this.data.quantity
-              ? this.data.quantity
-              : this.ingredientEdit.quantity,
-            unit: this.data.unit,
-            substitute: this.data.substitute
+            ...this.ingredientEdit,
+            ...this.data
           },
           index: this.ingredientEdit.index,
           isNew: false
@@ -166,7 +171,7 @@ export default {
     },
     deleteIngredient() {
       this.setIngredients({
-        ingredient: {},
+        ingredient: null,
         index: this.ingredientEdit.index,
         isNew: false
       })

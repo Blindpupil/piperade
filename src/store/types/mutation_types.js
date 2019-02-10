@@ -15,4 +15,8 @@ export const SET_CUPBOARDS = 'setCupboardItems'
 export const SET_INGREDIENTS = 'setIngredients'
 export const SET_INGREDIENT_EDIT = 'set ingredient object to be edited'
 export const SET_RECIPE_NAME = 'setRecipeName'
-export const ADD_RECIPE = 'add recipe to the recipes state'
+export const SET_RECIPES = 'set recipes to state'
+export const RESET_RECIPE = 'reset recipe to initial'
+
+// Pantry (probably should be part of the user)
+export const SET_UNITS_LIST = 'set units list'
