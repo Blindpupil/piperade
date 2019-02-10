@@ -2,7 +2,9 @@
   <v-flex shrink>
     <RecipesList />
     <AddRecipeDialogs>
-      <v-btn @click="resetRecipeState" class="primary">Add recipe</v-btn>
+      <v-btn fab absolute bottom right @click="resetRecipeState" class="primary add-recipe">
+        <v-icon>add</v-icon>
+      </v-btn>
     </AddRecipeDialogs>
   </v-flex>
 </template>
@@ -28,3 +30,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.add-recipe {
+  bottom: 5rem !important;
+}
+</style>
