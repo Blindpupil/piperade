@@ -22,9 +22,6 @@
           >
             <v-list-tile-content>
               <v-list-tile-title>{{ ingredient.ingredient }}</v-list-tile-title>
-              <v-list-tile-sub-title v-if="ingredient.substitute">
-                Or {{ ingredient.substitute }}
-              </v-list-tile-sub-title>
             </v-list-tile-content>
 
             <v-list-tile-action>
@@ -51,11 +48,11 @@
 <script>
 import { mapGetters, mapMutations } from 'vuex'
 import EditIngredientDialog from '@/components/organisms/EditIngredientDialog.vue'
+import { SET_INGREDIENT_EDIT } from '@/store/types/mutation_types'
 import {
   DELETE_CUPBOARD,
   WRITE_CUPBOARDS
 } from '@/store/types/action_types'
-import { SET_INGREDIENT_EDIT } from '@/store/types/mutation_types'
 
 export default {
   components: {
@@ -88,7 +85,10 @@ export default {
         this.$emit('added:cupboard')
         this.selected.push(index)
 
-        this.$store.dispatch(WRITE_CUPBOARDS, this.ingredients[index])
+        this.$store.dispatch(WRITE_CUPBOARDS, {
+          cupboardItems: this.ingredients[index],
+          isNew: false
+        })
       }
     }
   }

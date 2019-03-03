@@ -3,6 +3,9 @@ export const SET_ERROR = 'setError'
 export const SET_SUCCESS = 'setSuccess'
 export const CLEAR_ERROR = 'clearError'
 
+// Loading
+export const SET_LOADING = 'set loading state'
+
 // User
 export const SET_USER = 'setUser'
 

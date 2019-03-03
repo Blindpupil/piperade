@@ -3,7 +3,7 @@
     :active.sync="bottomNav"
     :color="color"
     :value="true"
-    absolute
+    fixed
     dark
     shift
   >
@@ -31,34 +31,36 @@
 
 <script>
 export default {
-  data: () => ({}),
+  data() {
+    return {
+      bottomNav: ''
+    }
+  },
+  created() {
+    const { pathname } = window.location
+    const location = pathname.substr(pathname.lastIndexOf('/') + 1)
+
+    switch (location) {
+      case '': this.bottomNav = 0
+        break
+      case 'pantry': this.bottomNav = 1
+        break
+      case 'lists': this.bottomNav = 2
+        break
+      case 'calendar': this.bottomNav = 3
+        break
+
+      default: this.bottomNav = 0
+    }
+  },
   computed: {
-    bottomNav: {
-      get() {
-        const path = window.location.pathname
-        const location = path.substr(path.lastIndexOf('/') + 1)
-
-        switch (location) {
-          case '': return 0
-          case 'pantry': return 1
-          case 'lists': return 2
-          case 'calendar': return 3
-
-          default: return 0
-        }
-      },
-      set() {
-        return this.bottomNav
-      }
-    },
     color() {
       switch (this.bottomNav) {
         case 0: return 'blue-grey'
         case 1: return 'teal'
         case 2: return 'brown'
         case 3: return 'indigo'
-
-        default: return 'black'
+        default: return 'blue-grey'
       }
     }
   },

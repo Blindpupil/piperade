@@ -1,6 +1,6 @@
 <template>
   <v-dialog
-    v-model="editDialog"
+    v-model="editCupboardDialog"
     transition="dialog-bottom-transition"
     persistent
   >
@@ -11,7 +11,7 @@
         <v-btn icon @click="goToPreviousDialog">
           <v-icon>arrow_back</v-icon>
         </v-btn>
-        <v-toolbar-title>Editing {{ingredient}} in {{recipeName}}</v-toolbar-title>
+        <v-toolbar-title>Editing {{ingredient}}</v-toolbar-title>
       </v-toolbar>
 
       <v-card-text>
@@ -34,6 +34,14 @@
                   placeholder="2"
                   :rules="quantityRules"
                   label="Quantity"
+                ></v-text-field>
+
+                <v-text-field
+                  v-model="price"
+                  placeholder="4"
+                  prefix="€"
+                  :rules="quantityRules"
+                  label="Price"
                 ></v-text-field>
 
                 <v-select
@@ -60,11 +68,11 @@
 <script>
 import { isEmpty } from 'lodash-es'
 import { mapGetters, mapMutations } from 'vuex'
-import { SET_INGREDIENTS } from '@/store/types/mutation_types'
+import { SET_CUPBOARDS } from '@/store/types/mutation_types'
 
 export default {
   data: () => ({
-    editDialog: false,
+    editCupboardDialog: false,
     activator: null,
     data: {},
     ingredientsList: ['Garlic', 'Onions', 'Tomatoes', 'Red Bell Peppers', 'Eggs'],
@@ -81,7 +89,7 @@ export default {
     validIngredient: false
   }),
   computed: {
-    ...mapGetters(['recipeName', 'ingredientEdit', 'unitsList']),
+    ...mapGetters(['ingredientEdit', 'unitsList']),
     ingredient: {
       get() {
         return (isEmpty(this.ingredientEdit.ingredient))
@@ -111,14 +119,24 @@ export default {
       set(newValue) {
         this.data.unit = newValue
       }
+    },
+    price: {
+      get() {
+        return (isEmpty(this.ingredientEdit.price))
+          ? ''
+          : this.ingredientEdit.price
+      },
+      set(newValue) {
+        this.data.price = newValue
+      }
     }
   },
   methods: {
     ...mapMutations({
-      setIngredients: SET_INGREDIENTS
+      setCupboards: SET_CUPBOARDS
     }),
     goToPreviousDialog() {
-      this.editDialog = false
+      this.editCupboardDialog = false
     },
     handleChange(e) {
       if (!isEmpty(e)) {
@@ -141,7 +159,7 @@ export default {
           isNew: false
         }
 
-        this.setIngredients(newIngredient, this.index)
+        this.setCupboards(newIngredient, this.index)
 
         this.goToPreviousDialog()
       }

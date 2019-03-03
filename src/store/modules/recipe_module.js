@@ -8,6 +8,7 @@ import {
   DELETE_RECIPE
 } from '@/store/types/action_types'
 import {
+  SET_LOADING,
   SET_CATEGORIES,
   SET_INGREDIENTS,
   SET_INGREDIENT_EDIT,
@@ -33,6 +34,7 @@ export default {
   },
   actions: {
     async [GET_RECIPES]({ commit }) {
+      commit(SET_LOADING, true)
       try {
         await recipesColRef.onSnapshot((querySnapshot) => {
           const recipes = []
@@ -44,6 +46,7 @@ export default {
             }
           })
           commit(SET_RECIPES, recipes)
+          commit(SET_LOADING, false)
         })
       } catch (err) {
         console.error(err)

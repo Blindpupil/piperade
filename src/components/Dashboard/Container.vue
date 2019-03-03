@@ -1,5 +1,5 @@
 <template>
-  <v-app id="inspire" dark>
+  <v-app id="inspire">
     <v-navigation-drawer clipped fixed v-model="drawer" app>
       <v-list dense>
         <v-list-tile>
@@ -26,11 +26,9 @@
       <v-toolbar-title>Piperade.</v-toolbar-title>
     </v-toolbar>
 
-    <v-content>
+    <v-content style="padding-bottom: 56px">
       <v-container fluid fill-height>
-        <v-layout justify-center>
-          <router-view></router-view>
-        </v-layout>
+        <router-view></router-view>
       </v-container>
     </v-content>
 

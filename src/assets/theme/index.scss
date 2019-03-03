@@ -1,3 +1,11 @@
+// Brand colors
+$brand-gray-1: #FBFBFB;
+$brand-gray-2: #F2F2F2;
+$brand-gray-3: #D8D8D8;
+$brand-background-gray: #FAFAFA;
+$brand-gray-text: #696969;
+
+
 // Utility classes
 .w100 {
   width: 100%;
@@ -5,6 +13,30 @@
 
 .min-flex {
   flex: 0 0 auto !important;
+}
+
+.text-brand-gray {
+  color: $brand-gray-text
+}
+
+.flat-card { 
+  padding-left: 0;
+  padding-right: 0;
+  background-color: $brand-background-gray !important;
+  box-shadow: none !important;
+}
+
+.small-avatar {
+  height: 28px !important;
+  width: 28px !important;
+}
+
+.small-icon {
+  font-size: 16px;
+}
+
+.medium-icon {
+  font-size: 20px;
 }
 
 // Mixins

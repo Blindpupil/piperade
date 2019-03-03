@@ -19,7 +19,6 @@ export function createIngredient(data = {}) {
     ingredient,
     quantity,
     unit,
-    substitute,
     price = ''
   } = data
 
@@ -27,7 +26,6 @@ export function createIngredient(data = {}) {
     ingredient,
     quantity,
     unit,
-    substitute,
     price
   }
 }
@@ -43,8 +41,7 @@ export function createIngredient(data = {}) {
 //             ingredient: 'ingredient name',
 //             quantity: Number,
 //             unit: String,
-//             price: Number,
-//             substitute: String
+//             price: Number
 //           }
 //         },
 //         portions: Number, // (not indexed)
