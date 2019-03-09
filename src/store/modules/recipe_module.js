@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import { isEmpty } from 'lodash-es'
 import { recipesColRef } from '@/firebase'
-import { createIngredient, createRecipe } from '@/store/models/Recipe'
+import { createRecipe } from '@/store/models/Recipe'
 import {
   GET_RECIPES,
   WRITE_RECIPE,
@@ -9,34 +9,35 @@ import {
 } from '@/store/types/action_types'
 import {
   SET_LOADING,
-  SET_CATEGORIES,
-  SET_INGREDIENTS,
-  SET_INGREDIENT_EDIT,
-  SET_RECIPE_NAME,
+  SET_RECIPE,
   SET_RECIPES,
   RESET_RECIPE
 } from '@/store/types/mutation_types'
 
 export default {
   state: {
-    categories: [],
-    ingredientEdit: {},
-    ingredients: [],
-    recipeName: '',
+    recipe: {},
     recipes: []
   },
   getters: {
-    categories: state => state.categories,
-    ingredientEdit: state => state.ingredientEdit,
-    ingredients: state => state.ingredients,
-    recipeName: state => state.recipeName,
-    recipes: state => state.recipes
+    recipe: state => state.recipe,
+    recipes: state => state.recipes,
+    recipeCategories: state => state.recipe.categories,
+    recipeIngredients: (state) => {
+      const ingredientsObj = state.recipe.ingredients
+      const ingredientsArray = []
+      if (!isEmpty(ingredientsObj)) {
+        Object.keys(ingredientsObj)
+          .forEach(key => ingredientsArray.push(ingredientsObj[key]))
+      }
+      return ingredientsArray
+    }
   },
   actions: {
     async [GET_RECIPES]({ commit }) {
       commit(SET_LOADING, true)
       try {
-        await recipesColRef.onSnapshot((querySnapshot) => {
+        await recipesColRef.orderBy('added').onSnapshot((querySnapshot) => {
           const recipes = []
           querySnapshot.forEach((doc) => {
             if (doc.exists) {
@@ -52,7 +53,8 @@ export default {
         console.error(err)
       }
     },
-    async [WRITE_RECIPE](context, recipe = {}) {
+    async [WRITE_RECIPE]({ commit }, recipe = {}) {
+      commit(SET_LOADING, true)
       try {
         const data = createRecipe(recipe)
         const { id } = recipe
@@ -62,6 +64,9 @@ export default {
         } else {
           await recipesColRef.add(data)
         }
+
+        commit(SET_RECIPE, data)
+        commit(SET_LOADING, false)
       } catch (err) {
         console.error(err)
       }
@@ -79,43 +84,23 @@ export default {
     }
   },
   mutations: {
+    [SET_RECIPE](state, recipe) {
+      if (recipe.id) {
+        const { recipes } = state
+        const targetIndex = recipes.findIndex(target => target.id === recipe.id)
+
+        Vue.set(recipes, targetIndex, recipe)
+      }
+      // eslint-disable-next-line no-param-reassign
+      state.recipe = recipe
+    },
     [SET_RECIPES](state, recipes) {
       // eslint-disable-next-line
       state.recipes = recipes
     },
-    [SET_CATEGORIES](state, categories) {
-      // eslint-disable-next-line
-      state.categories = categories
-    },
-    [SET_INGREDIENTS](state, { ingredient, index, isNew }) {
-      if (isEmpty(ingredient)) { // delete request
-        state.ingredients.splice(index, 1)
-      } else if (isNew) { // add new
-        const newIngredient = createIngredient(ingredient)
-        state.ingredients.push(newIngredient)
-      } else if (!isEmpty(index)) { // edit existing
-        const editedIngredient = createIngredient(ingredient)
-        Vue.set(state.ingredients, index, editedIngredient)
-      } else { // set ingredients from props
-        const ingredients = []
-        Object.keys(ingredient).forEach(i => ingredients.push(ingredient[i]))
-        // eslint-disable-next-line
-        state.ingredients = ingredients
-      }
-    },
-    [SET_INGREDIENT_EDIT](state, ingredient) {
-      // eslint-disable-next-line
-      state.ingredientEdit = ingredient
-    },
-    [SET_RECIPE_NAME](state, name) {
-      // eslint-disable-next-line
-      state.recipeName = name
-    },
     [RESET_RECIPE](state) {
       // eslint-disable-next-line
-      state.categories = []
-      // eslint-disable-next-line
-      state.ingredients = []
+      state.recipe = {}
     }
   }
 }

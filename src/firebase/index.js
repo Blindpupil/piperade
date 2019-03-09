@@ -29,3 +29,5 @@ export const usersColRef = db.collection('users')
 export const recipesColRef = usersColRef.doc(currentUser).collection('recipes')
 // reference of Pantry document
 export const pantryColRef = usersColRef.doc(currentUser).collection('pantry')
+// reference for Lists collection
+export const listsColRef = usersColRef.doc(currentUser).collection('lists')

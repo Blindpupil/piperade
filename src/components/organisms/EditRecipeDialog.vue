@@ -18,7 +18,7 @@
 
       <v-card-text class="py-1">
         <v-layout>
-          <v-text-field label="Name" v-model="newName" :placeholder="recipe.name"></v-text-field>
+          <v-text-field label="Name" v-model="name" :placeholder="recipe.name"></v-text-field>
         </v-layout>
 
         <v-subheader class="pa-0">
@@ -26,28 +26,51 @@
 
           <v-spacer></v-spacer>
 
-          <AddIngredientDialog>
+          <WriteIngredientDialog>
             <v-btn color="primary" fab small>
               <v-icon>add</v-icon>
             </v-btn>
-          </AddIngredientDialog>
+          </WriteIngredientDialog>
         </v-subheader>
 
-        <IngredientsList> </IngredientsList>
+        <IngredientsList />
 
         <v-text-field
-          v-model="newPortions"
+          v-model="portions"
           :rules="portionsRules"
           name="Portions"
-          label="Portions"
+          label="portions"
+          :placeholder="recipe.portions"
           hint="How many people it feeds in one sitting"
         ></v-text-field>
 
+        <v-flex align-self-start class="w100">
+          <v-subheader class="pa-0">
+            Duration
+          </v-subheader>
+
+          <v-layout>
+            <v-text-field
+              v-model="duration.hours"
+              :rules="durationRules"
+              label="hours"
+              name="Hours"
+              class="px-1"
+            ></v-text-field>
+            <v-text-field
+              v-model="duration.minutes"
+              :rules="durationRules"
+              label="minutes"
+              name="Minutes"
+            ></v-text-field>
+          </v-layout>
+        </v-flex>
+
         <v-textarea
-          v-model="newInstructions"
+          v-model="instructions"
+          :placeholder="recipe.instructions"
           label="Instructions"
           hint="Instructions you know, in case you need them"
-          :placeholder="recipe.instructions"
           persistent-hint
         ></v-textarea>
 
@@ -57,20 +80,20 @@
         <v-text-field
           label="Pics or it didn't happen"
           :placeholder="recipe.photo"
-          v-model="newPhoto"
+          v-model="photo"
         ></v-text-field>
 
         <v-subheader class="pa-0 mt-4 mb-1">
           Categories
         </v-subheader>
-        <CategoriesBox :categories="recipe.categories || []"/>
+        <CategoriesBox />
       </v-card-text>
 
       <v-spacer></v-spacer>
       <v-divider></v-divider>
 
       <v-card-actions class="min-flex">
-        <v-btn color="error" @click="remove"> Delete </v-btn>
+        <v-btn color="error" @click="deleteRecipe"> Delete </v-btn>
         <v-spacer></v-spacer>
         <v-btn color="primary" @click="save"> Save </v-btn>
       </v-card-actions>
@@ -80,55 +103,67 @@
 
 <script>
 import { mapGetters } from 'vuex'
+
+import { RESET_RECIPE } from '@/store/types/mutation_types'
 import { DELETE_RECIPE, WRITE_RECIPE } from '@/store/types/action_types'
+
 import CategoriesBox from '@/components/molecules/CategoriesBox.vue'
 import IngredientsList from '@/components/molecules/IngredientsList.vue'
-import AddIngredientDialog from '@/components/organisms/AddIngredientDialog.vue'
+import WriteIngredientDialog from '@/components/organisms/WriteIngredientDialog.vue'
+
 
 export default {
   components: {
     CategoriesBox,
     IngredientsList,
-    AddIngredientDialog
+    WriteIngredientDialog
   },
   props: {
     recipe: Object
   },
   data() {
     return {
-      newName: '',
+      durationRules: [
+        v => v >= 0 || 'Duration must be a real number'
+      ],
+      instructions: this.recipe.instructions,
+      duration: {
+        hours: this.recipe.duration.hours,
+        minutes: this.recipe.duration.minutes
+      },
       editRecipeDialog: false,
+      name: this.recipe.name,
+      portions: this.recipe.portions,
+      photo: this.recipe.photo,
       portionsRules: [
         v => v > 0 || 'Portions must be a number greater than 0'
-      ],
-      newInstructions: '',
-      newPortions: '',
-      newPhoto: ''
+      ]
     }
   },
   computed: {
-    ...mapGetters(['unitsList', 'ingredients', 'categories'])
+    ...mapGetters(['unitsList'])
   },
   methods: {
     close() {
+      this.$store.commit(RESET_RECIPE)
       this.editRecipeDialog = false
     },
-    remove() {
+    deleteRecipe() {
       this.$store.dispatch(DELETE_RECIPE, this.recipe)
 
       this.editRecipeDialog = false
-      this.$emit('close:dialog')
     },
     save() {
       const recipe = {
-        name: this.newName || this.recipe.name,
-        ingredients: this.ingredients,
-        categories: this.categories,
-        portions: this.newPortions || this.recipe.portions,
-        instructions: this.newInstructions || this.recipe.instructions,
-        photo: this.newPhoto || this.recipe.photo,
-        id: this.recipe.id
+        ...this.recipe,
+        duration: this.duration,
+        name: this.name,
+        portions: this.portions,
+        instructions: this.instructions,
+        photo: this.photo
       }
+
+      console.log('dispatching', recipe)
 
       this.$store.dispatch(WRITE_RECIPE, recipe)
 

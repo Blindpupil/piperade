@@ -1,54 +1,64 @@
 <template>
   <div>
-    <p v-if="ingredients.length === 0" class="ma-4">
+    <p v-if="recipeIngredients.length === 0" class="ma-4">
       You haven't added any ingredients yet...
     </p>
-    <v-layout row :key="index" align-center v-for="(ingredient, index) in ingredients">
+    <v-layout
+      v-for="(ingredient, index) in recipeIngredients"
+      row align-center
+      :key="index"
+    >
       <v-flex xs1>
-        <EditIngredientDialog>
-          <v-icon @click="editIngredient(ingredient, index)">
+        <WriteIngredientDialog :ingredient="ingredient">
+          <v-icon>
             edit
           </v-icon>
-        </EditIngredientDialog>
+        </WriteIngredientDialog>
       </v-flex>
 
-      <v-flex xs11>
+      <v-flex xs10>
         <v-list two-line class="py-0">
           <v-list-tile
             :key="ingredient.ingredient"
-            avatar
-            ripple
             @click="toggle(index)"
+            avatar ripple
           >
             <v-list-tile-content>
-              <v-list-tile-title>{{ ingredient.ingredient }}</v-list-tile-title>
+              <v-list-tile-title
+                :class="(selected.indexOf(index) < 0) ? '' : 'success--text'"
+              >
+                {{ ingredient.ingredient }}
+              </v-list-tile-title>
             </v-list-tile-content>
 
-            <v-list-tile-action>
-              <v-list-tile-action-text>
+            <v-list-tile-action class="ingredient-quantity">
+              <v-list-tile-action-text
+                :class="(selected.indexOf(index) < 0) ? '' : 'success--text'"
+              >
                 {{ ingredient.quantity }} {{ ingredient.unit }}
               </v-list-tile-action-text>
-              <v-icon v-if="selected.indexOf(index) < 0" color="grey lighten-1">
-                radio_button_unchecked
-              </v-icon>
-
-              <v-icon v-else color="green lighten-3">
-                check_circle
-              </v-icon>
             </v-list-tile-action>
           </v-list-tile>
         </v-list>
       </v-flex>
 
-      <v-divider v-if="index + 1 < ingredients.length" :key="index"></v-divider>
+      <v-flex xs1>
+        <v-icon
+          @click="removeIngredient(index)"
+          color="grey lighten-1"
+        >
+          delete_outline
+        </v-icon>
+      </v-flex>
+      <v-divider v-if="index + 1 < recipeIngredients.length" :key="index"></v-divider>
     </v-layout>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapMutations } from 'vuex'
-import EditIngredientDialog from '@/components/organisms/EditIngredientDialog.vue'
-import { SET_INGREDIENT_EDIT } from '@/store/types/mutation_types'
+import { mapGetters } from 'vuex'
+import WriteIngredientDialog from '@/components/organisms/WriteIngredientDialog.vue'
+import { SET_RECIPE } from '@/store/types/mutation_types'
 import {
   DELETE_CUPBOARD,
   WRITE_CUPBOARDS
@@ -56,23 +66,26 @@ import {
 
 export default {
   components: {
-    EditIngredientDialog
+    WriteIngredientDialog
   },
   computed: {
-    ...mapGetters(['ingredients'])
+    ...mapGetters(['recipe', 'recipeIngredients'])
   },
   data() {
     return {
-      selected: [],
-      pantry: []
+      selected: []
     }
   },
   methods: {
-    ...mapMutations({
-      setIngredientForEdit: SET_INGREDIENT_EDIT
-    }),
-    editIngredient(ingredient, index) {
-      this.setIngredientForEdit({ ...ingredient, index })
+    removeIngredient(index) {
+      const ingredients = this.recipeIngredients
+      ingredients.splice(index, 1)
+
+      const recipe = {
+        ...this.recipe,
+        ingredients
+      }
+      this.$store.commit(SET_RECIPE, recipe)
     },
     toggle(index) {
       const i = this.selected.indexOf(index)
@@ -94,3 +107,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.ingredient-quantity span {
+  font-size: 13px;
+}
+</style>

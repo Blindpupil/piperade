@@ -1,6 +1,6 @@
 <template>
   <v-combobox
-    v-model="model"
+    v-model="categories"
     :filter="filter"
     :hide-no-data="!search"
     :hint="hint"
@@ -80,12 +80,23 @@
 
 <script>
 import { isEmpty } from 'lodash-es'
-import { SET_CATEGORIES } from '@/store/types/mutation_types'
+import { mapGetters } from 'vuex'
+
+import { SET_RECIPE } from '@/store/types/mutation_types'
+
 
 export default {
   name: 'CupboardItemBox',
-  props: {
-    categories: Array
+  computed: {
+    ...mapGetters(['recipe', 'recipeCategories']),
+    categories: {
+      get() {
+        return this.recipeCategories
+      },
+      set(value) {
+        this.model = value
+      }
+    }
   },
   data() {
     return {
@@ -132,7 +143,7 @@ export default {
       ],
       nonce: 1,
       menu: false,
-      model: this.categories ? this.categories : [],
+      model: this.recipeCategories || [],
       search: null
     }
   },
@@ -155,7 +166,12 @@ export default {
         return v
       })
 
-      this.$store.commit(SET_CATEGORIES, this.model)
+      const recipe = {
+        ...this.recipe,
+        categories: this.model
+      }
+
+      this.$store.commit(SET_RECIPE, recipe)
     }
   },
   methods: {

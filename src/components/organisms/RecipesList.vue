@@ -13,15 +13,19 @@
     <div v-else class="masonry-container" :style="`height: ${masonryHeight}px`">
       <div
         v-for="recipe in recipes"
-        :key="recipe.index"
+        :key="recipe.id"
         ref="card"
         class="masonry-item"
       >
         <v-card class="recipe-card">
           <RecipeItemDialog :recipe="recipe" class="d-block">
             <div v-if="hasImage(recipe)">
-              <v-img :src="recipe.photo" @load="imageLoad" ref="image" class="recipe-card-image">
-              </v-img>
+              <v-img
+                :src="recipe.photo"
+                @load="imageLoad"
+                ref="image"
+                class="recipe-card-image"
+              ></v-img>
 
               <v-layout px-3 justify-end>
                 <div>
@@ -33,7 +37,11 @@
                 <div class="px-2">
                   <v-icon class="small-icon">access_time</v-icon>
                   <span class="text-brand-gray">
-                    {{ recipe.duration ? recipe.duration : '_:_' }}
+                    {{
+                      recipe.duration
+                        ? `${recipe.duration.hours}:${recipe.duration.minutes}`
+                        : '?'
+                    }}
                   </span>
                 </div>
                 <div>
@@ -57,24 +65,35 @@
             <v-card-title primary-title v-else>
               <div>
                 <div class="headline">{{ recipe.name }}</div>
-                <div class="multiline-ellipsis">
-                  <p class="text-brand-gray">{{ categoriesString(recipe) }}</p>
-                </div>
 
-                <v-layout>
-                  <div class="px-2">
+                <v-layout justify-end>
+                  <div>
                     <v-icon class="small-icon">person</v-icon>
                     <span class="text-brand-gray">
                       {{ recipe.portions ? recipe.portions : '?' }}
                     </span>
                   </div>
+                  <div class="px-2">
+                    <v-icon class="small-icon">access_time</v-icon>
+                    <span class="text-brand-gray">
+                      {{
+                        recipe.duration
+                          ? `${recipe.duration.hours}:${recipe.duration.minutes}`
+                          : '?'
+                      }}
+                    </span>
+                  </div>
                   <div>
                     <v-icon class="small-icon">payment</v-icon>
                     <span class="text-brand-gray">
-                      {{ recipe.price ? recipe.price : '?' }}
+                      {{ recipe.price ? recipe.price : '?€' }}
                     </span>
                   </div>
                 </v-layout>
+
+                <div class="multiline-ellipsis">
+                  <p class="text-brand-gray">{{ categoriesString(recipe) }}</p>
+                </div>
               </div>
             </v-card-title>
           </RecipeItemDialog>
@@ -82,18 +101,35 @@
           <v-divider light></v-divider>
 
           <v-card-actions class="pa-2">
-            <v-layout>
+            <v-layout align-center px-2>
               <v-avatar class="small-avatar blue-grey">
                 <v-icon class="small-icon" dark>calendar_today</v-icon>
               </v-avatar>
-              <v-icon class="px-2">
-                more_horiz
-              </v-icon>
+
+              <v-menu bottom left class="px-1">
+                <v-btn slot="activator" class="more-button" icon>
+                  <v-icon>more_horiz</v-icon>
+                </v-btn>
+
+                <v-list>
+                  <EditRecipeDialog class="w100" :recipe="recipe">
+                    <v-list-tile @click="setRecipe(recipe)">
+                      <v-icon class="small-icon pr-2">edit</v-icon>
+                      <v-list-tile-title>Edit</v-list-tile-title>
+                    </v-list-tile>
+                  </EditRecipeDialog>
+
+                  <v-list-tile @click="deleteRecipe(recipe)">
+                    <v-icon class="small-icon pr-2">delete</v-icon>
+                    <v-list-tile-title style="color: crimson">Delete</v-list-tile-title>
+                  </v-list-tile>
+                </v-list>
+              </v-menu>
             </v-layout>
 
             <v-layout justify-end px-2>
               <v-icon class="medium-icon">
-                forward
+                share
               </v-icon>
             </v-layout>
           </v-card-actions>
@@ -106,12 +142,17 @@
 <script>
 import { isEmpty } from 'lodash-es'
 import { mapGetters } from 'vuex'
-import { GET_RECIPES } from '@/store/types/action_types'
+
+import { SET_RECIPE } from '@/store/types/mutation_types'
+import { GET_RECIPES, DELETE_RECIPE } from '@/store/types/action_types'
+
 import Loader from '@/components/molecules/Loader.vue'
+import EditRecipeDialog from '@/components/organisms/EditRecipeDialog.vue'
 import RecipeItemDialog from '@/components/organisms/RecipeItemDialog.vue'
 
 export default {
   components: {
+    EditRecipeDialog,
     Loader,
     RecipeItemDialog
   },
@@ -121,7 +162,9 @@ export default {
     }
   },
   created() {
-    this.$store.dispatch(GET_RECIPES)
+    if (isEmpty(this.recipes)) {
+      this.$store.dispatch(GET_RECIPES)
+    }
   },
   mounted() {
     this.getDerivedMasonryHeight()
@@ -130,7 +173,17 @@ export default {
     ...mapGetters(['recipes', 'isLoading'])
   },
   methods: {
-    imageLoad() {
+    categoriesString({ categories }) {
+      const categoriesStrings = []
+
+      if (!isEmpty(categories)) {
+        categories.forEach(category => categoriesStrings.push(category.text))
+      }
+
+      return categoriesStrings.join(', ')
+    },
+    deleteRecipe(recipe) {
+      this.$store.dispatch(DELETE_RECIPE, recipe)
       this.getDerivedMasonryHeight()
     },
     getInitialMasonryHeight() {
@@ -151,7 +204,7 @@ export default {
         return this.getInitialMasonryHeight()
       }
 
-      const gutter = 10
+      const gutter = 16
       const columns = 2
       const recipesLength = this.recipes.length
       const firstColumnLength = Math.ceil(recipesLength / columns)
@@ -185,14 +238,11 @@ export default {
     hasImage({ photo }) {
       return !isEmpty(photo)
     },
-    categoriesString({ categories }) {
-      const categoriesStrings = []
-
-      if (!isEmpty(categories)) {
-        categories.forEach(category => categoriesStrings.push(category.text))
-      }
-
-      return categoriesStrings.join(', ')
+    imageLoad() {
+      this.getDerivedMasonryHeight()
+    },
+    setRecipe(recipe) {
+      this.$store.commit(SET_RECIPE, recipe)
     }
   }
 }
@@ -245,6 +295,10 @@ export default {
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     max-height: 250px;
+  }
+
+  .more-button {
+    color: rgba(0,0,0,0.54);
   }
 }
 </style>

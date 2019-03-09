@@ -14,6 +14,8 @@
 </template>
 
 <script>
+import { isEmpty } from 'lodash-es'
+import { mapGetters } from 'vuex'
 import { GET_CUPBOARDS } from '@/store/types/action_types'
 import CupboardsList from '@/components/molecules/CupboardsList.vue'
 
@@ -22,7 +24,12 @@ export default {
     CupboardsList
   },
   created() {
-    this.$store.dispatch(GET_CUPBOARDS)
+    if (isEmpty(this.cupboards)) {
+      this.$store.dispatch(GET_CUPBOARDS)
+    }
+  },
+  computed: {
+    ...mapGetters(['cupboards'])
   }
 }
 </script>
