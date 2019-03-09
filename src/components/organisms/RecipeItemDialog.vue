@@ -21,7 +21,10 @@
 
         <v-flex min-flex>
           <EditRecipeDialog @close:dialog="close" :recipe="recipe">
-            <v-btn color="primary" @click="setEditData" fab small>
+            <v-btn
+              color="primary"
+              @click="setRecipe(recipe)"
+              fab small>
               <v-icon>edit</v-icon>
             </v-btn>
           </EditRecipeDialog>
@@ -38,7 +41,7 @@
         </v-chip>
       </v-flex>
 
-      <IngredientsTable :recipe="recipe" />
+      <IngredientsTable :ingredients="recipe.ingredients" />
 
       <div>
         <v-card-title class="py-1"><h4>Instructions</h4></v-card-title>
@@ -49,9 +52,25 @@
 
       <v-list class="pt-0">
         <v-list-tile>
-          <v-list-tile-content>Portions</v-list-tile-content>
+          <span class="body-2">Duration</span>
           <v-list-tile-content class="align-end">
-            {{ recipe.portions }}
+            <span>
+              {{
+                recipe.duration
+                  ? `${recipe.duration.hours}:${recipe.duration.minutes}`
+                  : '?'
+              }}
+              <v-icon class="medium-icon">access_time</v-icon>
+            </span>
+          </v-list-tile-content>
+        </v-list-tile>
+
+        <v-list-tile>
+          <span class="body-2">Portions</span>
+          <v-list-tile-content class="align-end">
+            <span>
+              {{ recipe.portions }} <v-icon class="medium-icon">person</v-icon>
+            </span>
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
@@ -69,12 +88,7 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex'
-import {
-  SET_CATEGORIES,
-  SET_RECIPE_NAME,
-  SET_INGREDIENTS
-} from '@/store/types/mutation_types'
+import { SET_RECIPE } from '@/store/types/mutation_types'
 import EditRecipeDialog from '@/components/organisms/EditRecipeDialog.vue'
 import IngredientsTable from '@/components/molecules/IngredientsTable.vue'
 
@@ -90,18 +104,11 @@ export default {
     recipeItemDialog: false
   }),
   methods: {
-    ...mapMutations({
-      setCategories: SET_CATEGORIES,
-      setIngredients: SET_INGREDIENTS,
-      setName: SET_RECIPE_NAME
-    }),
-    setEditData() {
-      this.setCategories(this.recipe.categories)
-      this.setIngredients({ ingredient: this.recipe.ingredients })
-      this.setName(this.recipe.name)
-    },
     close() {
       this.recipeItemDialog = false
+    },
+    setRecipe(recipe) {
+      this.$store.commit(SET_RECIPE, recipe)
     }
   }
 }

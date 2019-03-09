@@ -4,7 +4,7 @@
     <v-divider></v-divider>
     <v-list dense>
       <v-list-tile
-        v-for="ingredient in Object.values(recipe.ingredients)"
+        v-for="ingredient in Object.values(ingredients)"
         :key="ingredient.ingredient"
       >
         <v-list-tile-content>
@@ -21,12 +21,7 @@
 <script>
 export default {
   props: {
-    recipe: Object
-  },
-  methods: {
-    wasup(stuff) {
-      console.log(stuff)
-    }
+    ingredients: Object
   }
 }
 </script>

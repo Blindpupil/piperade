@@ -1,14 +1,25 @@
 <template>
-  <v-flex shrink>
-    <RecipesList />
-    <AddRecipeDialogs>
-      <v-btn @click="resetRecipeState" class="primary">Add recipe</v-btn>
-    </AddRecipeDialogs>
-  </v-flex>
+  <v-layout>
+    <v-flex>
+      <RecipesList />
+      <AddRecipeDialogs>
+        <v-fab-transition>
+          <v-btn
+            v-show="!hidden"
+            @click="resetRecipeState"
+            class="primary add-recipe"
+            fab fixed bottom right
+          >
+            <v-icon>add</v-icon>
+          </v-btn>
+        </v-fab-transition>
+      </AddRecipeDialogs>
+    </v-flex>
+  </v-layout>
 </template>
 
 <script>
-import { GET_CUPBOARDS } from '@/store/types/action_types'
+
 import { RESET_RECIPE } from '@/store/types/mutation_types'
 import RecipesList from '@/components/organisms/RecipesList.vue'
 import AddRecipeDialogs from '@/components/organisms/AddRecipeDialogs.vue'
@@ -18,8 +29,13 @@ export default {
     AddRecipeDialogs,
     RecipesList
   },
+  data() {
+    return {
+      hidden: true
+    }
+  },
   created() {
-    this.$store.dispatch(GET_CUPBOARDS)
+    setTimeout(() => { this.hidden = false }, 100)
   },
   methods: {
     resetRecipeState() {
@@ -28,3 +44,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.add-recipe {
+  bottom: 5rem !important;
+}
+</style>

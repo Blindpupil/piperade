@@ -16,3 +16,10 @@ export const DELETE_CUPBOARD = 'delete an ingredient from Pantry'
 
 // Ingredients
 export const GET_USER_INGREDIENTS = 'get user ingredients'
+
+/*
+  LISTS COLLECTION
+*/
+export const GET_LISTS = 'get lists'
+export const WRITE_LIST = 'write list'
+export const DELETE_LIST = 'delete list'

@@ -1,12 +1,28 @@
 import { keyBy } from 'lodash-es'
 
 export function createRecipe(data = {}) {
-  const { ingredients, name } = data
+  const {
+    added,
+    duration,
+    ingredients,
+    name
+  } = data
   const lowerName = name.toLowerCase()
-  const ingredientsObj = keyBy(ingredients, i => i.ingredient.toLowerCase())
+  const ingredientsObj = ingredients
+    ? keyBy(ingredients, i => i.ingredient.toLowerCase())
+    : {}
+
+  const date = added || new Date()
+
+  const formatDuration = {
+    hours: duration.hours || 0,
+    minutes: duration.minutes || '?'
+  }
 
   const formatedData = {
     ...data,
+    added: date,
+    duration: formatDuration,
     name: lowerName,
     ingredients: ingredientsObj
   }
@@ -19,7 +35,6 @@ export function createIngredient(data = {}) {
     ingredient,
     quantity,
     unit,
-    substitute,
     price = ''
   } = data
 
@@ -27,7 +42,6 @@ export function createIngredient(data = {}) {
     ingredient,
     quantity,
     unit,
-    substitute,
     price
   }
 }
@@ -37,25 +51,30 @@ export function createIngredient(data = {}) {
 //   userId: { // Document
 //     recipes: { // Sub-collection
 //       recipeId: { // Document
-//         name: String,
-//         ingredients: {
-//           ingredient name: {
-//             ingredient: 'ingredient name',
-//             quantity: Number,
-//             unit: String,
-//             price: Number,
-//             substitute: String
-//           }
-//         },
-//         portions: Number, // (not indexed)
-//         instructions: String, // (not indexed)
+//         added: Date,
 //         categories: [
 //           {
 //             text: String,
 //             color: String
 //           }
 //         ],
+//         duration: {
+//           hours: Number,
+//           minutes: Number
+//         },
+//         id: String,
+//         ingredients: {
+//           'ingredient name': {
+//             ingredient: 'ingredient name',
+//             quantity: Number,
+//             unit: String,
+//             price: Number
+//           }
+//         },
+//         name: String,
+//         instructions: String, // (not indexed)
 //         picture: String, // (not indexed)
+//         portions: Number, // (not indexed)
 //         public: Boolean
 //       }
 //     }
