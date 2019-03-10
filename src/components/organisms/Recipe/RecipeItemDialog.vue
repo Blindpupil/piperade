@@ -89,8 +89,10 @@
 
 <script>
 import { SET_RECIPE } from '@/store/types/mutation_types'
-import EditRecipeDialog from '@/components/organisms/EditRecipeDialog.vue'
-import IngredientsTable from '@/components/molecules/IngredientsTable.vue'
+
+import IngredientsTable from '@/components/atoms/IngredientsTable.vue'
+import EditRecipeDialog from '@/components/organisms/Recipe/EditRecipeDialog.vue'
+
 
 export default {
   components: {

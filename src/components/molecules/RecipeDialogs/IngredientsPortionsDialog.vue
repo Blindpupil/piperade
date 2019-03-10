@@ -108,10 +108,11 @@
 import { isEmpty } from 'lodash-es'
 import { mapGetters } from 'vuex'
 
-import IngredientsList from '@/components/molecules/IngredientsList.vue'
-import WriteIngredientDialog from '@/components/organisms/WriteIngredientDialog.vue'
-
 import { SET_RECIPE } from '@/store/types/mutation_types'
+
+import IngredientsList from '@/components/molecules/IngredientsList.vue'
+import WriteIngredientDialog from '@/components/molecules/WriteIngredientDialog.vue'
+
 
 export default {
   props: {

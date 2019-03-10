@@ -6,7 +6,7 @@
           <div>
             <div class="headline">{{ list.name }}</div>
             <p class="text-brand-gray">
-              {{ list.added }}
+              {{ list.edited }}
             </p>
             <span
               v-for="item in list.items"
@@ -22,11 +22,7 @@
 
         <v-card-actions class="pa-2">
           <v-layout align-center px-2>
-            <v-avatar class="small-avatar blue-grey">
-              <v-icon class="small-icon" dark>calendar_today</v-icon>
-            </v-avatar>
-
-            <v-menu bottom left class="px-1">
+            <v-menu bottom left>
               <v-btn slot="activator" class="more-button" icon>
                 <v-icon>more_horiz</v-icon>
               </v-btn>
@@ -66,7 +62,7 @@ export default {
     return {
       lists: [
         {
-          added: d,
+          edited: d,
           name: 'Groceries',
           items: [
             { origin: 'piperade' },
@@ -75,7 +71,7 @@ export default {
           ]
         },
         {
-          added: yd,
+          edited: yd,
           name: 'House stuff',
           items: [
             { origin: 'sugar' },

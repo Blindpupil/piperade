@@ -21,8 +21,10 @@
 <script>
 
 import { RESET_RECIPE } from '@/store/types/mutation_types'
-import RecipesList from '@/components/organisms/RecipesList.vue'
-import AddRecipeDialogs from '@/components/organisms/AddRecipeDialogs.vue'
+
+import RecipesList from '@/components/organisms/Recipe/RecipesList.vue'
+import AddRecipeDialogs from '@/components/organisms/Recipe/AddRecipeDialogs.vue'
+
 
 export default {
   components: {

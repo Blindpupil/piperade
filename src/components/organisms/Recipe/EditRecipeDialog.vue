@@ -107,9 +107,9 @@ import { mapGetters } from 'vuex'
 import { RESET_RECIPE } from '@/store/types/mutation_types'
 import { DELETE_RECIPE, WRITE_RECIPE } from '@/store/types/action_types'
 
-import CategoriesBox from '@/components/molecules/CategoriesBox.vue'
+import CategoriesBox from '@/components/atoms/CategoriesBox.vue'
 import IngredientsList from '@/components/molecules/IngredientsList.vue'
-import WriteIngredientDialog from '@/components/organisms/WriteIngredientDialog.vue'
+import WriteIngredientDialog from '@/components/molecules/WriteIngredientDialog.vue'
 
 
 export default {

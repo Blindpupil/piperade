@@ -57,12 +57,13 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import WriteIngredientDialog from '@/components/organisms/WriteIngredientDialog.vue'
 import { SET_RECIPE } from '@/store/types/mutation_types'
 import {
   DELETE_CUPBOARD,
   WRITE_CUPBOARDS
 } from '@/store/types/action_types'
+
+import WriteIngredientDialog from '@/components/molecules/WriteIngredientDialog.vue'
 
 export default {
   components: {

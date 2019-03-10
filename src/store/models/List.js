@@ -22,17 +22,11 @@ export function createListItemFromRecipe(data = {}) {
 }
 
 export function createList(data = {}) {
-  const {
-    added
-  } = data
-
-  const date = added || new Date()
-  const lastEdited = new Date()
+  const edited = new Date()
 
   const formattedData = {
     ...data,
-    added: date,
-    edited: lastEdited
+    edited
   }
 
   return Object.freeze(formattedData)
@@ -43,7 +37,6 @@ export function createList(data = {}) {
 //   userId: {  // Document
 //     lists: [  // Collection
 //       {
-//         added: Date,
 //         edited: Date,
 //         name: 'list name',
 //         items: [

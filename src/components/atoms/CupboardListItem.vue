@@ -40,8 +40,10 @@
 <script>
 import { isEmpty } from 'lodash-es'
 import { mapGetters, mapMutations } from 'vuex'
+
 import { SET_ERROR } from '@/store/types/mutation_types'
 import { WRITE_CUPBOARDS, DELETE_CUPBOARD } from '@/store/types/action_types'
+
 
 export default {
   props: {

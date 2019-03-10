@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import BottomNav from '@/components/molecules/BottomNav.vue'
+import BottomNav from '@/components/atoms/BottomNav.vue'
 
 export default {
   components: {

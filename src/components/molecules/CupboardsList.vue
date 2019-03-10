@@ -38,8 +38,11 @@
 <script>
 import { isEmpty } from 'lodash-es'
 import { mapGetters } from 'vuex'
+
 import { SET_CUPBOARDS } from '@/store/types/mutation_types'
-import CupboardListItem from '@/components/molecules/CupboardListItem.vue'
+
+import CupboardListItem from '@/components/atoms/CupboardListItem.vue'
+
 
 export default {
   components: {

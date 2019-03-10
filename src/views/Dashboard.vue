@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import Container from '@/components/Dashboard/Container.vue'
+import Container from '@/components/templates/Container.vue'
 
 export default {
   name: 'Dashboard',

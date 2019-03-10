@@ -16,8 +16,11 @@
 <script>
 import { isEmpty } from 'lodash-es'
 import { mapGetters } from 'vuex'
+
 import { GET_CUPBOARDS } from '@/store/types/action_types'
+
 import CupboardsList from '@/components/molecules/CupboardsList.vue'
+
 
 export default {
   components: {

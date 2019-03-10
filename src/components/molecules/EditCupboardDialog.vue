@@ -70,6 +70,7 @@ import { isEmpty } from 'lodash-es'
 import { mapGetters, mapMutations } from 'vuex'
 import { SET_CUPBOARDS } from '@/store/types/mutation_types'
 
+
 export default {
   data: () => ({
     editCupboardDialog: false,

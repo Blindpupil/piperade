@@ -162,9 +162,9 @@ import { mapGetters } from 'vuex'
 import { SET_RECIPE } from '@/store/types/mutation_types'
 import { GET_RECIPES, DELETE_RECIPE } from '@/store/types/action_types'
 
-import Loader from '@/components/molecules/Loader.vue'
-import EditRecipeDialog from '@/components/organisms/EditRecipeDialog.vue'
-import RecipeItemDialog from '@/components/organisms/RecipeItemDialog.vue'
+import Loader from '@/components/atoms/Loader.vue'
+import EditRecipeDialog from '@/components/organisms/Recipe/EditRecipeDialog.vue'
+import RecipeItemDialog from '@/components/organisms/Recipe/RecipeItemDialog.vue'
 
 export default {
   components: {
