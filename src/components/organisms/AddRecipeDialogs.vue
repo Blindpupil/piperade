@@ -22,14 +22,13 @@
       @back:detailsdialog="backToIngredients"
       @cancel:addrecipedialogs="cancel"
     />
-
   </v-layout>
 </template>
 
 <script>
-import NameDialog from '@/components/molecules/AddRecipeDialogs/NameDialog.vue'
-import IngredientsPortionsDialog from '@/components/molecules/AddRecipeDialogs/IngredientsPortionsDialog.vue'
-import DetailsDialog from '@/components/molecules/AddRecipeDialogs/DetailsDialog.vue'
+import NameDialog from '@/components/molecules/RecipeDialogs/NameDialog.vue'
+import IngredientsPortionsDialog from '@/components/molecules/RecipeDialogs/IngredientsPortionsDialog.vue'
+import DetailsDialog from '@/components/molecules/RecipeDialogs/DetailsDialog.vue'
 
 import { RESET_RECIPE } from '@/store/types/mutation_types'
 

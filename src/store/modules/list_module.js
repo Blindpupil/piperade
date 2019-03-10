@@ -1,83 +1,82 @@
-// import { isEmpty } from 'lodash-es'
-// import { listsColRef } from '@/firebase'
-// import {
-//   createList,
-//   createPantryKey,
-//   createPantry
-// } from '@/store/models/List'
-// import {
-//   GET_LISTS,
-//   WRITE_LIST,
-//   DELETE_LIST
-// } from '@/store/types/action_types'
-// import {} from '@/store/types/mutation_types'
+import { isEmpty } from 'lodash-es'
+import { listsColRef } from '@/firebase'
+import {
+  createList,
+  createListItemFromRecipe
+} from '@/store/models/List'
+import {
+  GET_LISTS,
+  WRITE_LIST,
+  DELETE_LIST
+} from '@/store/types/action_types'
+import { SET_LIST, SET_LISTS } from '@/store/types/mutation_types'
 
-// export default {
-//   state: {
-//     lists: [],
-//     list: {}
-//   },
-//   getters: {
-//     lists: state => state.lists,
-//     list: state => state.list,
-//     listItems: state => state.list.items
-//   }
-//   actions: {
-//     async [GET_CUPBOARDS]({ commit }) {
-//       try {
-//         pantryColRef.orderBy('added').onSnapshot((docs) => {
-//           const cupboardItems = []
-//           docs.forEach(doc => cupboardItems.push(doc.data()))
-//           if (!isEmpty(cupboardItems)) {
-//             commit(SET_CUPBOARDS, { cupboardItems })
-//           }
-//         })
-//       } catch (err) {
-//         console.error(err)
-//       }
-//     },
-//     async [WRITE_CUPBOARDS](context, data) {
-//       const cupboardItems = data.cupboardItems || data
-//       try {
-//         const pantry = createPantry(cupboardItems)
-//         const keys = Object.keys(pantry)
+export default {
+  state: {
+    lists: [],
+    list: {}
+  },
+  getters: {
+    lists: state => state.lists,
+    list: state => state.list,
+    listItems: state => state.list.items
+  },
+  actions: {
+    async [GET_LISTS]({ commit }) {
+      try {
+        listsColRef.orderBy('added', 'desc').onSnapshot((docs) => {
+          const lists = []
+          docs.forEach(doc => lists.push(doc.data()))
+          if (!isEmpty(lists)) {
+            commit(SET_LISTS, lists)
+          }
+        })
+      } catch (err) {
+        console.error(err)
+      }
+    },
+    async [WRITE_LIST](context, data = {}) {
+      try {
+        const { recipes } = data
+        const listItems = recipes.map(recipe => createListItemFromRecipe(recipe))
+        console.log('listItems', listItems)
+        const formattedData = {
+          ...data,
+          recipes: listItems
+        }
+        const list = createList(formattedData)
+        const { id } = data
 
-//         if (Array.isArray(data)) {
-//           await keys.forEach((key) => {
-//             pantryColRef.doc(key).set(pantry[key])
-//           })
-//         } else {
-//           const key = keys[0]
-//           await pantryColRef.doc(key).set(pantry[key])
-//         }
-//       } catch (err) {
-//         console.error(err)
-//       }
-//     },
-//     async [DELETE_CUPBOARD](context, cupboardItem) {
-//       try {
-//         const key = createPantryKey(cupboardItem.ingredient)
+        console.log('list', list)
 
-//         // Store gets updated automatically. No need to mutate
-//         await pantryColRef.doc(key).delete()
-//       } catch (err) {
-//         console.error(err)
-//       }
-//     }
-//   },
-//   mutations: {
-//     [SET_CUPBOARDS](state, { cupboardItems, isNew }) {
-//       if (isNew) { // add new
-//         const newCupboard = createCupboardItem(cupboardItems)
-//         state.cupboards.push(newCupboard)
-//       } else if (Array.isArray(cupboardItems)) { // set from props
-//         // eslint-disable-next-line
-//         state.cupboards = [...cupboardItems]
-//       } else { // set from GET_CUPBOARDS action
-//         const cupboardItemsArr = Object.values(cupboardItems)
-//         // eslint-disable-next-line
-//         state.cupboards = [...cupboardItemsArr]
-//       }
-//     }
-//   }
-// }
+        if (id) {
+          await listsColRef.doc(id).update(list)
+        } else {
+          await listsColRef.add(list)
+        }
+      } catch (err) {
+        console.error(err)
+      }
+    },
+    async [DELETE_LIST](context, list) {
+      try {
+        const { key } = list
+
+        // Store gets updated automatically. No need to mutate
+        await listsColRef.doc(key).delete()
+      } catch (err) {
+        console.error(err)
+      }
+    }
+  },
+  mutations: {
+    [SET_LISTS](state, lists) {
+      // eslint-disable-next-line
+      state.lists = lists
+    },
+    [SET_LIST](state, list) {
+      // eslint-disable-next-line
+      state.lists = list
+    }
+  }
+}

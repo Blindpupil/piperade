@@ -20,3 +20,7 @@ export const RESET_RECIPE = 'reset recipe to initial'
 // Pantry (probably should be part of the user)
 export const SET_CUPBOARDS = 'set pantry cupboards'
 export const SET_UNITS_LIST = 'set units list'
+
+// List
+export const SET_LISTS = 'set lists'
+export const SET_LIST = 'set single list'

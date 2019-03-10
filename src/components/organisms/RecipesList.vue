@@ -103,7 +103,23 @@
           <v-card-actions class="pa-2">
             <v-layout align-center px-2>
               <v-avatar class="small-avatar blue-grey">
-                <v-icon class="small-icon" dark>calendar_today</v-icon>
+                <v-menu bottom left class="px-1">
+                  <v-btn slot="activator" class="more-button" icon>
+                    <v-icon class="small-icon" style="color: white">add</v-icon>
+                  </v-btn>
+
+                  <v-list>
+                    <v-list-tile @click="setRecipe(recipe)">
+                      <v-icon class="small-icon pr-2">today</v-icon>
+                      <v-list-tile-title>Add to calendar</v-list-tile-title>
+                    </v-list-tile>
+
+                    <v-list-tile @click="setRecipe(recipe)">
+                      <v-icon class="small-icon pr-2">list</v-icon>
+                      <v-list-tile-title>Add to list</v-list-tile-title>
+                    </v-list-tile>
+                  </v-list>
+                </v-menu>
               </v-avatar>
 
               <v-menu bottom left class="px-1">

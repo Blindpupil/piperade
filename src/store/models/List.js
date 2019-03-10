@@ -27,10 +27,12 @@ export function createList(data = {}) {
   } = data
 
   const date = added || new Date()
+  const lastEdited = new Date()
 
   const formattedData = {
     ...data,
-    added: date
+    added: date,
+    edited: lastEdited
   }
 
   return Object.freeze(formattedData)
@@ -42,6 +44,7 @@ export function createList(data = {}) {
 //     lists: [  // Collection
 //       {
 //         added: Date,
+//         edited: Date,
 //         name: 'list name',
 //         items: [
 //           {

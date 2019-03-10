@@ -1,6 +1,6 @@
 <template>
-  <v-flex shrink>
-    Calendar goes here. Handling routing first
+  <v-flex>
+    Calendar coming soon...
   </v-flex>
 </template>
 
