@@ -4,6 +4,7 @@ import { recipesColRef } from '@/firebase'
 import { createRecipe } from '@/store/models/Recipe'
 import {
   GET_RECIPES,
+  GET_RECIPES_BY_ID,
   WRITE_RECIPE,
   DELETE_RECIPE
 } from '@/store/types/action_types'
@@ -46,9 +47,34 @@ export default {
               recipes.push({ ...data, id })
             }
           })
+
           commit(SET_RECIPES, recipes)
           commit(SET_LOADING, false)
         })
+      } catch (err) {
+        console.error(err)
+      }
+    },
+    /**
+     * @param {*} data array of IDS.
+     * For now, only used to complement GET_LISTS
+     */
+    async [GET_RECIPES_BY_ID]({ commit }, data = []) {
+      try {
+        const recipes = []
+        await data.forEach((id) => {
+          recipesColRef.where('id', '==', id).get().then((snap) => {
+            snap.forEach((doc) => {
+              // doc.data() is never undefined for query doc snapshots
+              const recipe = doc.data()
+              recipes.push(recipe)
+            })
+          })
+        })
+
+        console.log('recipes in GET_RECIPES_BY_ID', recipes)
+
+        commit(SET_RECIPES, recipes)
       } catch (err) {
         console.error(err)
       }

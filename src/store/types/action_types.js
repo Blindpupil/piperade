@@ -2,6 +2,7 @@
   RECIPES COLLECTION
 */
 export const GET_RECIPES = 'get user recipes'
+export const GET_RECIPES_BY_ID = 'get recipes by id'
 export const WRITE_RECIPE = 'write recipe doc'
 export const DELETE_RECIPE = 'delete recipe'
 
@@ -23,3 +24,5 @@ export const GET_USER_INGREDIENTS = 'get user ingredients'
 export const GET_LISTS = 'get lists'
 export const WRITE_LIST = 'write list'
 export const DELETE_LIST = 'delete list'
+export const PARSE_LIST_ITEMS = 'parse list items from recipes and cupboards'
+export const GET_LIST_RECIPES = 'get complete recipe objects for list'

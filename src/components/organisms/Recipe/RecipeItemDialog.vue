@@ -41,7 +41,7 @@
         </v-chip>
       </v-flex>
 
-      <IngredientsTable :ingredients="recipe.ingredients" />
+      <IngredientsTable :ingredients="Object.values(recipe.ingredients)" />
 
       <div>
         <v-card-title class="py-1"><h4>Instructions</h4></v-card-title>
@@ -89,8 +89,10 @@
 
 <script>
 import { SET_RECIPE } from '@/store/types/mutation_types'
-import EditRecipeDialog from '@/components/organisms/EditRecipeDialog.vue'
-import IngredientsTable from '@/components/molecules/IngredientsTable.vue'
+
+import IngredientsTable from '@/components/atoms/IngredientsTable.vue'
+import EditRecipeDialog from '@/components/organisms/Recipe/EditRecipeDialog.vue'
+
 
 export default {
   components: {

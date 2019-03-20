@@ -1,6 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from '@/views/Home.vue'
+
+import Recipes from '@/components/pages/Recipes.vue'
+import Pantry from '@/components/pages/Pantry.vue'
+import Lists from '@/components/pages/Lists.vue'
+import Calendar from '@/components/pages/Calendar.vue'
 
 Vue.use(Router)
 
@@ -10,15 +14,15 @@ export default new Router({
     {
       path: '/',
       name: 'home',
-      component: Home
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "home" */ '@/views/Home.vue')
     },
     {
       path: '/about',
       name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ '@/views/About.vue')
+      component: () => import('@/views/About.vue')
     },
     {
       path: '/dashboard',
@@ -26,19 +30,19 @@ export default new Router({
       children: [
         {
           path: '/',
-          component: () => import('@/components/Dashboard/Recipes.vue')
+          component: Recipes
         },
         {
           path: 'pantry',
-          component: () => import('@/components/Dashboard/Pantry.vue')
+          component: Pantry
         },
         {
           path: 'lists',
-          component: () => import('@/components/Dashboard/Lists.vue')
+          component: Lists
         },
         {
           path: 'calendar',
-          component: () => import('@/components/Dashboard/Calendar.vue')
+          component: Calendar
         }
       ]
     }

@@ -103,7 +103,25 @@
           <v-card-actions class="pa-2">
             <v-layout align-center px-2>
               <v-avatar class="small-avatar blue-grey">
-                <v-icon class="small-icon" dark>calendar_today</v-icon>
+                <v-menu bottom left class="px-1">
+                  <v-btn slot="activator" class="more-button" icon>
+                    <v-icon class="small-icon" style="color: white">add</v-icon>
+                  </v-btn>
+
+                  <v-list>
+                    <v-list-tile>
+                      <v-icon class="small-icon pr-2">today</v-icon>
+                      <v-list-tile-title>Add to calendar</v-list-tile-title>
+                    </v-list-tile>
+
+                    <AddRecipeToListsDialog class="w100" :recipe="recipe">
+                      <v-list-tile @click="''">
+                        <v-icon class="small-icon pr-2">list</v-icon>
+                        <v-list-tile-title>Add to list</v-list-tile-title>
+                      </v-list-tile>
+                    </AddRecipeToListsDialog>
+                  </v-list>
+                </v-menu>
               </v-avatar>
 
               <v-menu bottom left class="px-1">
@@ -144,26 +162,23 @@ import { isEmpty } from 'lodash-es'
 import { mapGetters } from 'vuex'
 
 import { SET_RECIPE } from '@/store/types/mutation_types'
-import { GET_RECIPES, DELETE_RECIPE } from '@/store/types/action_types'
+import { DELETE_RECIPE } from '@/store/types/action_types'
 
-import Loader from '@/components/molecules/Loader.vue'
-import EditRecipeDialog from '@/components/organisms/EditRecipeDialog.vue'
-import RecipeItemDialog from '@/components/organisms/RecipeItemDialog.vue'
+import Loader from '@/components/atoms/Loader.vue'
+import AddRecipeToListsDialog from '@/components/molecules/AddListDialogs/AddRecipeToListsDialog.vue'
+import EditRecipeDialog from '@/components/organisms/Recipe/EditRecipeDialog.vue'
+import RecipeItemDialog from '@/components/organisms/Recipe/RecipeItemDialog.vue'
 
 export default {
   components: {
-    EditRecipeDialog,
     Loader,
+    AddRecipeToListsDialog,
+    EditRecipeDialog,
     RecipeItemDialog
   },
   data() {
     return {
       masonryHeight: null
-    }
-  },
-  created() {
-    if (isEmpty(this.recipes)) {
-      this.$store.dispatch(GET_RECIPES)
     }
   },
   mounted() {

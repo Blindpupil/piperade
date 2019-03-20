@@ -33,7 +33,7 @@
           </WriteIngredientDialog>
         </v-subheader>
 
-        <IngredientsList />
+        <RecipeIngredientsList />
 
         <v-text-field
           v-model="portions"
@@ -107,15 +107,15 @@ import { mapGetters } from 'vuex'
 import { RESET_RECIPE } from '@/store/types/mutation_types'
 import { DELETE_RECIPE, WRITE_RECIPE } from '@/store/types/action_types'
 
-import CategoriesBox from '@/components/molecules/CategoriesBox.vue'
-import IngredientsList from '@/components/molecules/IngredientsList.vue'
-import WriteIngredientDialog from '@/components/organisms/WriteIngredientDialog.vue'
+import CategoriesBox from '@/components/atoms/CategoriesBox.vue'
+import RecipeIngredientsList from '@/components/molecules/RecipeIngredientsList.vue'
+import WriteIngredientDialog from '@/components/molecules/WriteIngredientDialog.vue'
 
 
 export default {
   components: {
     CategoriesBox,
-    IngredientsList,
+    RecipeIngredientsList,
     WriteIngredientDialog
   },
   props: {
@@ -162,8 +162,6 @@ export default {
         instructions: this.instructions,
         photo: this.photo
       }
-
-      console.log('dispatching', recipe)
 
       this.$store.dispatch(WRITE_RECIPE, recipe)
 

@@ -62,9 +62,9 @@
 
 <script>
 import { mapGetters } from 'vuex'
-
-import CategoriesBox from '@/components/molecules/CategoriesBox.vue'
 import { WRITE_RECIPE } from '@/store/types/action_types'
+
+import CategoriesBox from '@/components/atoms/CategoriesBox.vue'
 
 
 export default {

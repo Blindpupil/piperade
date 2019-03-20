@@ -1,39 +1,86 @@
-export function createListItemFromRecipe(data = {}) {
-  const {
-    name,
-    ingredients,
-    id
-  } = data
+import { timestamp } from '@/firebase'
+import { flatten, isEmpty } from 'lodash-es'
 
-  let list
-  if (Array.isArray(ingredients)) {
-    list = ingredients
-  } else {
-    list = Object.values(ingredients)
-  }
+const sumIngredientQuantities = (ingredients = []) => {
+  const sum = []
 
-  const formattedData = {
-    origin: name,
-    id,
-    list
-  }
+  ingredients.forEach((current) => {
+    const currentIngredient = current.ingredient
 
-  return Object.freeze(formattedData)
+    const matchIndex = sum.findIndex(
+      o => (o.ingredient === currentIngredient) && (o.unit === current.unit)
+    )
+
+    if (matchIndex === -1) {
+      sum.push(current)
+    } else {
+      const matchObj = sum.splice(matchIndex, 1)[0]
+      const quantity = Number(matchObj.quantity) + Number(current.quantity)
+
+      sum.push({
+        ...current,
+        quantity
+      })
+    }
+  })
+  return sum
 }
 
-export function createList(data = {}) {
-  const {
-    added
-  } = data
+const filterByIngredientsInCupboards = ({ ingredients = [], cupboards = [] } = {}) => {
+  const result = []
 
-  const date = added || new Date()
+  ingredients.forEach((item) => {
+    const match = cupboards.find(
+      cupboard => (cupboard.ingredient === item.ingredient) && (cupboard.unit === item.unit)
+    )
 
-  const formattedData = {
-    ...data,
-    added: date
+    const missing = match ? Number(item.quantity) - Number(match.quantity) : item.quantity
+    const obtained = missing <= 0
+
+    result.push({
+      ...item,
+      missing,
+      obtained
+    })
+  })
+
+  return result
+}
+
+export function createItemsFromRecipes({ recipes = [], cupboards = [] } = {}) {
+  const allIngredients = []
+
+  recipes.forEach(recipe => allIngredients.push(Object.values(recipe.ingredients)))
+
+  const ingredients = sumIngredientQuantities(flatten(allIngredients))
+  const parsedIngredients = filterByIngredientsInCupboards({ ingredients, cupboards })
+
+  return parsedIngredients
+}
+
+export function createList({ list = {}, cupboards = [] } = {}) {
+  const { recipes } = list
+  let { items } = list
+
+  const createdList = {}
+
+  if (!isEmpty(recipes) && !isEmpty(cupboards)) {
+    items = createItemsFromRecipes({ recipes, cupboards })
+    Object.assign(createdList, { items })
   }
 
-  return Object.freeze(formattedData)
+  if (!isEmpty(recipes)) {
+    const recipeIds = recipes.map(recipe => recipe.id)
+    Object.assign(createdList, { recipes: recipeIds })
+  }
+
+  const edited = timestamp
+
+  return {
+    ...createdList,
+    ...list,
+    edited
+  }
 }
 
 // LIST DOCUMENT EXAMPLE (and how it's stored in FS)
@@ -41,23 +88,24 @@ export function createList(data = {}) {
 //   userId: {  // Document
 //     lists: [  // Collection
 //       {
-//         added: Date,
+//         edited: Date,
 //         name: 'list name',
+//         recipes: [ 'recipeIdString', 'otherRecipeIdString' ],
 //         items: [
 //           {
-//             origin: 'recipe name',
-//             id: 'recipeIdString',
-//             list: [{ ingredientObjs }]
-//           },
+//             ingredient: 'name',
+//             quantity: Number,
+//             unit: String,
+//             price: Number,
+//             missing: Number,
+//             obtained: Boolean
+//           }
+//         ],
+//         extras: [
 //           {
-//             origin: 'other name',
-//             id: 'otherRecipeIdString',
-//             list: [{ ingredientObjs }]
-//           },
-//           {
-//             origin: 'user items',
-//             id: null,
-//             list: [{ userCustomItems }]
+//             item: Name,
+//             quantity: Number,
+//             obtained: Boolean
 //           }
 //         ]
 //       }

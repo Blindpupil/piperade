@@ -22,7 +22,6 @@
       @back:detailsdialog="backToIngredients"
       @cancel:addrecipedialogs="cancel"
     />
-
   </v-layout>
 </template>
 

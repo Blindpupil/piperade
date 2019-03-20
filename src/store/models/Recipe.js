@@ -39,7 +39,7 @@ export function createIngredient(data = {}) {
   } = data
 
   return {
-    ingredient,
+    ingredient: ingredient.toLowerCase(),
     quantity,
     unit,
     price
