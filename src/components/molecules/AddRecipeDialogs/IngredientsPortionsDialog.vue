@@ -1,10 +1,8 @@
 <template>
   <v-dialog
     v-model="ingredientsDialog"
-    fullscreen
-    hide-overlay
     transition="dialog-bottom-transition"
-    scrollable
+    fullscreen hide-overlay scrollable
   >
     <v-card tile>
       <v-toolbar card>
@@ -30,7 +28,7 @@
               </v-subheader>
 
               <!-- Ingredients list view -->
-              <IngredientsList @added:cupboard="toggleAlert"> </IngredientsList>
+              <RecipeIngredientsList @added:cupboard="toggleAlert"> </RecipeIngredientsList>
             </v-flex>
 
             <v-flex align-self-start class="w100">
@@ -110,7 +108,7 @@ import { mapGetters } from 'vuex'
 
 import { SET_RECIPE } from '@/store/types/mutation_types'
 
-import IngredientsList from '@/components/molecules/IngredientsList.vue'
+import RecipeIngredientsList from '@/components/molecules/RecipeIngredientsList.vue'
 import WriteIngredientDialog from '@/components/molecules/WriteIngredientDialog.vue'
 
 
@@ -119,7 +117,7 @@ export default {
     ingredientsDialog: Boolean
   },
   components: {
-    IngredientsList,
+    RecipeIngredientsList,
     WriteIngredientDialog
   },
   computed: {

@@ -41,7 +41,7 @@
         </v-chip>
       </v-flex>
 
-      <IngredientsTable :ingredients="recipe.ingredients" />
+      <IngredientsTable :ingredients="Object.values(recipe.ingredients)" />
 
       <div>
         <v-card-title class="py-1"><h4>Instructions</h4></v-card-title>

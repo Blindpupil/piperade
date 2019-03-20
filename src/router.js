@@ -1,6 +1,11 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
+import Recipes from '@/components/pages/Recipes.vue'
+import Pantry from '@/components/pages/Pantry.vue'
+import Lists from '@/components/pages/Lists.vue'
+import Calendar from '@/components/pages/Calendar.vue'
+
 Vue.use(Router)
 
 export default new Router({
@@ -25,19 +30,19 @@ export default new Router({
       children: [
         {
           path: '/',
-          component: () => import('@/components/pages/Recipes.vue')
+          component: Recipes
         },
         {
           path: 'pantry',
-          component: () => import('@/components/pages/Pantry.vue')
+          component: Pantry
         },
         {
           path: 'lists',
-          component: () => import('@/components/pages/Lists.vue')
+          component: Lists
         },
         {
           path: 'calendar',
-          component: () => import('@/components/pages/Calendar.vue')
+          component: Calendar
         }
       ]
     }

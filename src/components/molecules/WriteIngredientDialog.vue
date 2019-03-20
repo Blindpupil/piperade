@@ -92,7 +92,7 @@ export default {
         return ''
       },
       set(newValue) {
-        this.data.ingredient = newValue
+        this.data.ingredient = newValue.toLowerCase()
       }
     },
     quantity: {
@@ -137,11 +137,13 @@ export default {
     validateIngredient() {
       if (this.$refs.writeIngredientForm.validate()) {
         this.snackbar = true
+
         const ingredients = Object.assign({}, this.recipe.ingredients)
         const ingredient = { ...this.ingredient, ...this.data }
-        const oldKey = this.ingredient ? this.ingredient.ingredient : null
-        let key = this.data.ingredient || oldKey
-        key = key.toLowerCase()
+
+        const oldKey = this.ingredient ? this.ingredient.ingredient.toLowerCase() : false
+        const key = this.data.ingredient.toLowerCase() || oldKey
+
         delete ingredients[oldKey]
 
         ingredients[key] = ingredient

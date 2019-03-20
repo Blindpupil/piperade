@@ -10,7 +10,7 @@ import {
   GET_CUPBOARDS,
   DELETE_CUPBOARD
 } from '@/store/types/action_types'
-import { SET_CUPBOARDS } from '@/store/types/mutation_types'
+import { SET_CUPBOARDS, REMOVE_CUPBOARD } from '@/store/types/mutation_types'
 
 export default {
   state: {
@@ -73,12 +73,15 @@ export default {
         state.cupboards.push(newCupboard)
       } else if (Array.isArray(cupboardItems)) { // set from props
         // eslint-disable-next-line
-        state.cupboards = [...cupboardItems]
+        state.cupboards = cupboardItems
       } else { // set from GET_CUPBOARDS action
         const cupboardItemsArr = Object.values(cupboardItems)
         // eslint-disable-next-line
-        state.cupboards = [...cupboardItemsArr]
+        state.cupboards = cupboardItemsArr
       }
+    },
+    [REMOVE_CUPBOARD](state, { index }) {
+      state.cupboards.splice(index, 1)
     }
   }
 }

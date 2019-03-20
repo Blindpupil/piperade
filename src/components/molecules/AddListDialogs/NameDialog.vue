@@ -1,8 +1,6 @@
 <template>
   <v-dialog
     v-model="nameDialog"
-    fullscreen
-    hide-overlay
     transition="dialog-bottom-transition"
   >
     <v-card>
@@ -13,12 +11,11 @@
               <v-form ref="nameForm" v-model="validName">
                 <v-text-field
                   label="Name"
-                  hint="Of the recipe, not yours"
+                  hint="Of the list, not yours"
                   v-model="name"
-                  :placeholder="recipe.name || name"
+                  :placeholder="list.name || ''"
                   :rules="nameRules"
-                  persistent-hint
-                  required
+                  persistent-hint required
                 ></v-text-field>
               </v-form>
             </v-flex>
@@ -28,12 +25,11 @@
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn flat @click="close">Close</v-btn>
         <v-btn
-          slot="activator"
-          :disabled="!validName"
-          color="primary"
           @click="validateName"
+          :disabled="!validName"
+          slot="activator"
+          color="primary"
         >
           Continue
         </v-btn>
@@ -45,40 +41,39 @@
 <script>
 import { isEmpty } from 'lodash-es'
 import { mapGetters } from 'vuex'
-import { SET_RECIPE } from '@/store/types/mutation_types'
+
+import { SET_LIST } from '@/store/types/mutation_types'
 
 
 export default {
   props: {
     nameDialog: Boolean
   },
-  computed: {
-    ...mapGetters(['recipe'])
-  },
   data() {
     return {
       name: '',
       nameRules: [
-        v => !isEmpty(v.trim()) || 'You must call this recipe something',
+        v => !isEmpty(v.trim()) || 'You must call this list something',
         v => v.length <= 30 || 'Name must be less than 30 characters'
       ],
       validName: false
     }
   },
+  computed: {
+    ...mapGetters(['list'])
+  },
   methods: {
     save() {
       this.showNextDialog()
-      const recipe = {
-        ...this.recipe,
+
+      const list = {
+        ...this.list,
         name: this.name
       }
-      this.$store.commit(SET_RECIPE, recipe)
-    },
-    close() {
-      this.$emit('cancel:addrecipedialogs')
+      this.$store.commit(SET_LIST, list)
     },
     showNextDialog() {
-      this.$emit('show:ingredientsdialog')
+      this.$emit('saved:listname')
     },
     validateName() {
       if (this.$refs.nameForm.validate()) {

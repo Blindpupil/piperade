@@ -109,15 +109,17 @@
                   </v-btn>
 
                   <v-list>
-                    <v-list-tile @click="setRecipe(recipe)">
+                    <v-list-tile>
                       <v-icon class="small-icon pr-2">today</v-icon>
                       <v-list-tile-title>Add to calendar</v-list-tile-title>
                     </v-list-tile>
 
-                    <v-list-tile @click="setRecipe(recipe)">
-                      <v-icon class="small-icon pr-2">list</v-icon>
-                      <v-list-tile-title>Add to list</v-list-tile-title>
-                    </v-list-tile>
+                    <AddRecipeToListsDialog class="w100" :recipe="recipe">
+                      <v-list-tile @click="''">
+                        <v-icon class="small-icon pr-2">list</v-icon>
+                        <v-list-tile-title>Add to list</v-list-tile-title>
+                      </v-list-tile>
+                    </AddRecipeToListsDialog>
                   </v-list>
                 </v-menu>
               </v-avatar>
@@ -160,26 +162,23 @@ import { isEmpty } from 'lodash-es'
 import { mapGetters } from 'vuex'
 
 import { SET_RECIPE } from '@/store/types/mutation_types'
-import { GET_RECIPES, DELETE_RECIPE } from '@/store/types/action_types'
+import { DELETE_RECIPE } from '@/store/types/action_types'
 
 import Loader from '@/components/atoms/Loader.vue'
+import AddRecipeToListsDialog from '@/components/molecules/AddListDialogs/AddRecipeToListsDialog.vue'
 import EditRecipeDialog from '@/components/organisms/Recipe/EditRecipeDialog.vue'
 import RecipeItemDialog from '@/components/organisms/Recipe/RecipeItemDialog.vue'
 
 export default {
   components: {
-    EditRecipeDialog,
     Loader,
+    AddRecipeToListsDialog,
+    EditRecipeDialog,
     RecipeItemDialog
   },
   data() {
     return {
       masonryHeight: null
-    }
-  },
-  created() {
-    if (isEmpty(this.recipes)) {
-      this.$store.dispatch(GET_RECIPES)
     }
   },
   mounted() {

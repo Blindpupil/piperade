@@ -2,12 +2,13 @@
   <v-layout>
     <v-flex>
       <RecipesList />
+
       <AddRecipeDialogs>
         <v-fab-transition>
           <v-btn
             v-show="!hidden"
             @click="resetRecipeState"
-            class="primary add-recipe"
+            class="primary bottom-float"
             fab fixed bottom right
           >
             <v-icon>add</v-icon>
@@ -19,7 +20,6 @@
 </template>
 
 <script>
-
 import { RESET_RECIPE } from '@/store/types/mutation_types'
 
 import RecipesList from '@/components/organisms/Recipe/RecipesList.vue'
@@ -46,9 +46,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-.add-recipe {
-  bottom: 5rem !important;
-}
-</style>

@@ -9,30 +9,50 @@
 
     <v-flex>
       <CupboardsList />
+
+      <v-fab-transition>
+        <v-btn
+          v-show="!hidden"
+          @click="newCupboard"
+          color="primary"
+          class="bottom-float"
+          fab fixed bottom right
+        >
+          <v-icon>add</v-icon>
+        </v-btn>
+      </v-fab-transition>
     </v-flex>
   </v-layout>
 </template>
 
 <script>
-import { isEmpty } from 'lodash-es'
-import { mapGetters } from 'vuex'
-
-import { GET_CUPBOARDS } from '@/store/types/action_types'
-
-import CupboardsList from '@/components/molecules/CupboardsList.vue'
+import { SET_CUPBOARDS } from '@/store/types/mutation_types'
+import CupboardsList from '@/components/organisms/Pantry/CupboardsList.vue'
 
 
 export default {
   components: {
     CupboardsList
   },
-  created() {
-    if (isEmpty(this.cupboards)) {
-      this.$store.dispatch(GET_CUPBOARDS)
+  data() {
+    return {
+      hidden: true
     }
   },
-  computed: {
-    ...mapGetters(['cupboards'])
+  created() {
+    setTimeout(() => { this.hidden = false }, 100)
+  },
+  methods: {
+    newCupboard() {
+      this.$store.commit(SET_CUPBOARDS, {
+        cupboardItems: {
+          ingredient: '',
+          quantity: '',
+          unit: ''
+        },
+        isNew: true
+      })
+    }
   }
 }
 </script>

@@ -14,6 +14,8 @@ db.settings(settings)
 
 // Delete field function
 export const deleteField = () => firebase.firestore.FieldValue.delete()
+// Server time value
+export const timestamp = firebase.firestore.FieldValue.serverTimestamp()
 
 // Auth
 export const auth = firebase.auth()

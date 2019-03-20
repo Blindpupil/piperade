@@ -11,6 +11,14 @@ $brand-gray-text: #696969;
   width: 100%;
 }
 
+.text-center {
+  text-align: center
+}
+
+.capitalize {
+  text-transform: capitalize
+}
+
 .min-flex {
   flex: 0 0 auto !important;
 }
@@ -19,11 +27,12 @@ $brand-gray-text: #696969;
   color: $brand-gray-text
 }
 
-.flat-card { 
-  padding-left: 0;
-  padding-right: 0;
-  background-color: $brand-background-gray !important;
-  box-shadow: none !important;
+.background-brang-gray {
+  background-color: $brand-gray-text
+}
+
+.clickable {
+  cursor: pointer;
 }
 
 .small-avatar {
@@ -37,6 +46,15 @@ $brand-gray-text: #696969;
 
 .medium-icon {
   font-size: 20px;
+}
+
+.bottom-float {
+  bottom: 5rem !important;
+}
+
+.very-small-btn {
+  height: 30px;
+  width: 30px;
 }
 
 // Mixins

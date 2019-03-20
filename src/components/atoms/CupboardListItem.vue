@@ -41,7 +41,7 @@
 import { isEmpty } from 'lodash-es'
 import { mapGetters, mapMutations } from 'vuex'
 
-import { SET_ERROR } from '@/store/types/mutation_types'
+import { REMOVE_CUPBOARD, SET_ERROR } from '@/store/types/mutation_types'
 import { WRITE_CUPBOARDS, DELETE_CUPBOARD } from '@/store/types/action_types'
 
 
@@ -61,13 +61,13 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['unitsList', 'ingredientsList']),
+    ...mapGetters(['cupboards', 'unitsList', 'ingredientsList']),
     ingredient: {
       get() {
         return this.cupboard.ingredient
       },
       set(ingredient) {
-        this.pantry.ingredient = ingredient
+        this.pantry.ingredient = ingredient.toLowerCase()
         this.handleChange()
       }
     },
@@ -120,7 +120,14 @@ export default {
       if (valid) this.$store.dispatch(WRITE_CUPBOARDS, pantry)
     },
     removeItem() {
-      this.$store.dispatch(DELETE_CUPBOARD, this.cupboard)
+      // handle removing empty item
+      if (isEmpty(this.cupboard.ingredient.trim())) {
+        const index = this.cupboards.length - 1
+
+        this.$store.commit(REMOVE_CUPBOARD, { index })
+      } else {
+        this.$store.dispatch(DELETE_CUPBOARD, this.cupboard)
+      }
     }
   }
 }
