@@ -80,7 +80,7 @@
 
 <script>
 import { isEmpty } from 'lodash-es'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 
 import { SET_RECIPE } from '@/store/types/mutation_types'
 
@@ -88,7 +88,10 @@ import { SET_RECIPE } from '@/store/types/mutation_types'
 export default {
   name: 'CupboardItemBox',
   computed: {
-    ...mapGetters(['recipe', 'recipeCategories']),
+    ...mapGetters(['recipeCategories']),
+    ...mapState({
+      recipe: state => state.recipe.recipe
+    }),
     categories: {
       get() {
         return this.recipeCategories

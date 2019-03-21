@@ -25,8 +25,14 @@ export default {
     lists: []
   },
   getters: {
-    list: state => state.list,
-    lists: state => state.lists
+    listRecipesNames: (state) => {
+      const names = []
+
+      if (!isEmpty(state.list.recipes)) {
+        state.list.recipes.forEach(recipe => names.push(recipe.name))
+      }
+      return names
+    }
   },
   actions: {
     async [GET_LISTS]({ commit }) {

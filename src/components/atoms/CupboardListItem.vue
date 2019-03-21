@@ -39,7 +39,7 @@
 
 <script>
 import { isEmpty } from 'lodash-es'
-import { mapGetters, mapMutations } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 
 import { REMOVE_CUPBOARD, SET_ERROR } from '@/store/types/mutation_types'
 import { WRITE_CUPBOARDS, DELETE_CUPBOARD } from '@/store/types/action_types'
@@ -61,7 +61,11 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['cupboards', 'unitsList', 'ingredientsList']),
+    ...mapState({
+      cupboards: state => state.pantry.cupboards,
+      unitsList: state => state.pantry.unitsList,
+      ingredientsList: state => state.pantry.ingredientsList
+    }),
     ingredient: {
       get() {
         return this.cupboard.ingredient

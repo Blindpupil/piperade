@@ -62,6 +62,7 @@ export function createList({ list = {}, cupboards = [] } = {}) {
   const { recipes } = list
   let { items } = list
 
+  const edited = timestamp
   const createdList = {}
 
   if (!isEmpty(recipes) && !isEmpty(cupboards)) {
@@ -74,11 +75,9 @@ export function createList({ list = {}, cupboards = [] } = {}) {
     Object.assign(createdList, { recipes: recipeIds })
   }
 
-  const edited = timestamp
-
   return {
-    ...createdList,
     ...list,
+    ...createdList,
     edited
   }
 }

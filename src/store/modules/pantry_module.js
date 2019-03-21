@@ -18,11 +18,7 @@ export default {
     unitsList: ['cloves', 'units', 'cl', 'g', 'k', 'l', 'ts', 'tbs', 'ml', 'oz', 'cups'],
     ingredientsList: ['garlic', 'onion', 'tomato', 'red bell pepper', 'egg']
   },
-  getters: {
-    cupboards: state => state.cupboards,
-    unitsList: state => state.unitsList,
-    ingredientsList: state => state.ingredientsList
-  },
+  getters: {},
   actions: {
     async [GET_CUPBOARDS]({ commit }) {
       try {

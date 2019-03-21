@@ -27,6 +27,7 @@
 
 <script>
 import { SET_CUPBOARDS } from '@/store/types/mutation_types'
+
 import CupboardsList from '@/components/organisms/Pantry/CupboardsList.vue'
 
 

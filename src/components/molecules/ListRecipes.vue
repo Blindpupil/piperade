@@ -31,7 +31,7 @@
 
 <script>
 import { isEmpty } from 'lodash-es'
-import { mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 
 import IngredientsTable from '@/components/atoms/IngredientsTable.vue'
 
@@ -44,7 +44,9 @@ export default {
     IngredientsTable
   },
   computed: {
-    ...mapGetters(['recipes']),
+    ...mapState({
+      recipes: state => state.recipe.recipes
+    }),
     computedListRecipes() {
       const { listRecipes } = this
       let result = []

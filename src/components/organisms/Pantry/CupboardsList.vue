@@ -24,7 +24,7 @@
 
 <script>
 import { isEmpty } from 'lodash-es'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 
 import CupboardListItem from '@/components/atoms/CupboardListItem.vue'
 
@@ -34,7 +34,10 @@ export default {
     CupboardListItem
   },
   computed: {
-    ...mapGetters(['cupboards', 'message']),
+    ...mapGetters(['message']),
+    ...mapState({
+      cupboards: state => state.pantry.cupboards
+    }),
     validationAlert() {
       return (!isEmpty(this.message))
     }

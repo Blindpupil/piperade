@@ -59,7 +59,7 @@
 
 <script>
 import { isEmpty } from 'lodash-es'
-import { mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 import { SET_RECIPE } from '@/store/types/mutation_types'
 
 
@@ -81,7 +81,11 @@ export default {
     validIngredient: false
   }),
   computed: {
-    ...mapGetters(['recipe', 'unitsList', 'ingredientsList']),
+    ...mapState({
+      recipe: state => state.recipe.recipe,
+      unitsList: state => state.pantry.unitsList,
+      ingredientsList: state => state.pantry.ingredientsList
+    }),
     newIngredient: {
       get() {
         if (this.ingredient) {
@@ -142,7 +146,7 @@ export default {
         const ingredient = { ...this.ingredient, ...this.data }
 
         const oldKey = this.ingredient ? this.ingredient.ingredient.toLowerCase() : false
-        const key = this.data.ingredient.toLowerCase() || oldKey
+        const key = this.data.ingredient ? this.data.ingredient.toLowerCase() : oldKey
 
         delete ingredients[oldKey]
 

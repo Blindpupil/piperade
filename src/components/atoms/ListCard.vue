@@ -61,7 +61,7 @@ export default {
       const names = []
       this.list.recipes.forEach(recipe => names.push(recipe.name))
 
-      return names.join(' - ')
+      return names.join(' | ')
     }
   },
   methods: {

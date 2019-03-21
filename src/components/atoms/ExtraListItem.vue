@@ -39,7 +39,7 @@
 
 <script>
 import { isEmpty } from 'lodash-es'
-import { mapGetters, mapMutations } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 
 import {
   ADD_EXRA_LIST_ITEM,
@@ -63,7 +63,9 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['list']),
+    ...mapState({
+      list: state => state.list.list
+    }),
     name: {
       get() {
         return this.extra ? this.extra.name : ''
@@ -124,7 +126,8 @@ export default {
         })
       }
     },
-    removeItem(index) {
+    removeItem() {
+      const index = this.$vnode.key
       // handle removing empty item
       if (!this.item.name || isEmpty(this.item.name.trim())) {
         const last = this.list.extras.length - 1

@@ -102,7 +102,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 
 import { RESET_RECIPE } from '@/store/types/mutation_types'
 import { DELETE_RECIPE, WRITE_RECIPE } from '@/store/types/action_types'
@@ -141,7 +141,9 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['unitsList'])
+    ...mapState({
+      unitsList: state => state.pantry.unitsList
+    })
   },
   methods: {
     close() {

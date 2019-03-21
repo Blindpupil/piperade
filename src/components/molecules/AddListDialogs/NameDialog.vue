@@ -40,7 +40,7 @@
 
 <script>
 import { isEmpty } from 'lodash-es'
-import { mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 
 import { SET_LIST } from '@/store/types/mutation_types'
 
@@ -60,7 +60,9 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['list'])
+    ...mapState({
+      list: state => state.list.list
+    })
   },
   methods: {
     save() {

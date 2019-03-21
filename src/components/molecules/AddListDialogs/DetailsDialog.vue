@@ -78,7 +78,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 import { WRITE_LIST } from '@/store/types/action_types'
 import { ADD_EXRA_LIST_ITEM } from '@/store/types/mutation_types'
 
@@ -100,7 +100,9 @@ export default {
     ListRecipes
   },
   computed: {
-    ...mapGetters(['list'])
+    ...mapState({
+      list: state => state.list.list
+    })
   },
   methods: {
     addExtra() {
