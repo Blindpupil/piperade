@@ -4,7 +4,7 @@
 
 <script>
 import { isEmpty } from 'lodash-es'
-import { mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 
 import { GET_RECIPES, GET_CUPBOARDS, GET_LISTS } from '@/store/types/action_types'
 import Container from '@/components/templates/Container.vue'
@@ -15,7 +15,11 @@ export default {
     Container
   },
   computed: {
-    ...mapGetters(['recipes', 'cupboards', 'lists'])
+    ...mapState({
+      recipes: state => state.recipe.recipes,
+      lists: state => state.list.lists,
+      cupboards: state => state.pantry.cupboards
+    })
   },
   created() {
     if (isEmpty(this.recipes)) {

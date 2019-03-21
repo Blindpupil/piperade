@@ -104,7 +104,7 @@
 
 <script>
 import { isEmpty } from 'lodash-es'
-import { mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 
 import { SET_RECIPE } from '@/store/types/mutation_types'
 
@@ -121,7 +121,10 @@ export default {
     WriteIngredientDialog
   },
   computed: {
-    ...mapGetters(['recipe', 'isLoading'])
+    ...mapState({
+      recipe: state => state.recipe.recipe,
+      isLoading: state => state.loading.isLoading
+    })
   },
   data() {
     return {

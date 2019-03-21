@@ -5,9 +5,7 @@ export default {
   state: {
     isLoading: false
   },
-  getters: {
-    isLoading: state => state.isLoading
-  },
+  getters: {},
   actions: {},
   mutations: {
     [SET_LOADING](state, value) {

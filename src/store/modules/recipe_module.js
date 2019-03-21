@@ -21,8 +21,6 @@ export default {
     recipes: []
   },
   getters: {
-    recipe: state => state.recipe,
-    recipes: state => state.recipes,
     recipeCategories: state => state.recipe.categories,
     recipeIngredients: (state) => {
       const ingredientsObj = state.recipe.ingredients
@@ -56,7 +54,7 @@ export default {
       }
     },
     /**
-     * @param {*} data array of IDS.
+     * @param [data] IDS.
      * For now, only used to complement GET_LISTS
      */
     async [GET_RECIPES_BY_ID]({ commit }, data = []) {

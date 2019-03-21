@@ -41,7 +41,7 @@
 
 <script>
 import { isEmpty } from 'lodash-es'
-import { mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 
 import { PARSE_LIST_ITEMS } from '@/store/types/action_types'
 
@@ -52,30 +52,36 @@ export default {
   },
   data() {
     return {
-      added: {},
       flats: {},
+      added: {},
       addRecipesToList: false
     }
   },
-  created() {
-    if (!isEmpty(this.recipes)) {
-      this.recipes.forEach((recipe) => {
-        this.$set(this.flats, recipe.id, true)
-        this.$set(this.added, recipe.id, recipe)
-      })
+  watch: {
+    list(newVal) {
+      if (!isEmpty(newVal.recipes)) {
+        newVal.recipes.forEach((recipe) => {
+          if (recipe.id) {
+            Object.assign(this.added, { [recipe.id]: recipe })
+            Object.assign(this.flats, { [recipe.id]: true })
+          }
+        })
+      }
     }
   },
   computed: {
-    ...mapGetters(['recipes'])
+    ...mapState({
+      recipes: state => state.recipe.recipes
+    })
   },
   methods: {
     toggle(item) {
       if (this.added[item.id]) {
-        this.$set(this.flats, item.id, false)
+        this.$delete(this.flats, item.id)
         this.$delete(this.added, item.id)
-      } else {
-        this.$set(this.flats, item.id, true)
+      } else if (item.id) {
         this.$set(this.added, item.id, item)
+        this.$set(this.flats, item.id, true)
       }
     },
     saveRecipesInList() {

@@ -159,7 +159,7 @@
 
 <script>
 import { isEmpty } from 'lodash-es'
-import { mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 
 import { SET_RECIPE } from '@/store/types/mutation_types'
 import { DELETE_RECIPE } from '@/store/types/action_types'
@@ -185,7 +185,10 @@ export default {
     this.getDerivedMasonryHeight()
   },
   computed: {
-    ...mapGetters(['recipes', 'isLoading'])
+    ...mapState({
+      recipes: state => state.recipe.recipes,
+      isLoading: state => state.loading.isLoading
+    })
   },
   methods: {
     categoriesString({ categories }) {

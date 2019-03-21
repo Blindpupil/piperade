@@ -61,7 +61,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapState } from 'vuex'
 import { WRITE_RECIPE } from '@/store/types/action_types'
 
 import CategoriesBox from '@/components/atoms/CategoriesBox.vue'
@@ -75,7 +75,9 @@ export default {
     CategoriesBox
   },
   computed: {
-    ...mapGetters(['recipe'])
+    ...mapState({
+      recipe: state => state.recipe.recipe
+    })
   },
   data() {
     return {

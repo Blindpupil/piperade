@@ -58,7 +58,8 @@
 
 <script>
 import { isEmpty } from 'lodash-es'
-import { mapGetters } from 'vuex'
+import { mapState } from 'vuex'
+
 import { WRITE_LIST } from '@/store/types/action_types'
 
 
@@ -74,7 +75,10 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['lists', 'recipes']),
+    ...mapState({
+      lists: state => state.list.lists,
+      recipes: state => state.recipe.recipes
+    }),
     nothingAdded() {
       return isEmpty(this.added)
     }

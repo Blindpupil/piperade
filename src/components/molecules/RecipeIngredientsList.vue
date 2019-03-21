@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 import { SET_RECIPE } from '@/store/types/mutation_types'
 import {
   DELETE_CUPBOARD,
@@ -70,7 +70,10 @@ export default {
     WriteIngredientDialog
   },
   computed: {
-    ...mapGetters(['recipe', 'recipeIngredients'])
+    ...mapGetters(['recipeIngredients']),
+    ...mapState({
+      recipe: state => state.recipe.recipe
+    })
   },
   data() {
     return {

@@ -35,8 +35,9 @@
 </template>
 
 <script>
-import { ADDED_CUPBOARD_FROM_LIST, REMOVED_CUPBOARD_FROM_LIST } from '@/store/types/mutation_types'
 import { DELETE_CUPBOARD, WRITE_CUPBOARDS } from '@/store/types/action_types'
+import { ADDED_CUPBOARD_FROM_LIST, REMOVED_CUPBOARD_FROM_LIST } from '@/store/types/mutation_types'
+
 
 export default {
   props: {

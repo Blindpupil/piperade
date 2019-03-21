@@ -11,9 +11,7 @@ export default {
     success: ''
   },
   getters: {
-    error: state => state.error,
-    message: state => state.error.message,
-    success: state => state.success
+    message: state => state.error.message
   },
   actions: {},
   mutations: {
