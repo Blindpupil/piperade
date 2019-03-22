@@ -19,8 +19,7 @@ export const timestamp = firebase.firestore.FieldValue.serverTimestamp()
 
 // Auth
 export const auth = firebase.auth()
-const currentUser = 'user1' // (TODO)
-
+export const googleProvider = new firebase.auth.GoogleAuthProvider()
 
 /*
   REFERENCES
@@ -28,8 +27,8 @@ const currentUser = 'user1' // (TODO)
 // reference of Users collection
 export const usersColRef = db.collection('users')
 // reference of Recipes collection
-export const recipesColRef = usersColRef.doc(currentUser).collection('recipes')
+export const recipesColRef = currentUser => usersColRef.doc(currentUser).collection('recipes')
 // reference of Pantry document
-export const pantryColRef = usersColRef.doc(currentUser).collection('pantry')
+export const pantryColRef = currentUser => usersColRef.doc(currentUser).collection('pantry')
 // reference for Lists collection
-export const listsColRef = usersColRef.doc(currentUser).collection('lists')
+export const listsColRef = currentUser => usersColRef.doc(currentUser).collection('lists')

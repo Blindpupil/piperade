@@ -6,6 +6,7 @@ import pantry from '@/store/modules/pantry_module'
 import list from '@/store/modules/list_module'
 import alert from '@/store/modules/alert_module'
 import loading from '@/store/modules/loading_module'
+import user from '@/store/modules/user_module'
 
 Vue.use(Vuex)
 
@@ -16,6 +17,7 @@ export default new Vuex.Store({
     list,
     loading,
     pantry,
-    recipe
+    recipe,
+    user
   }
 })

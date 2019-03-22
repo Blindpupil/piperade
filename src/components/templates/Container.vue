@@ -1,5 +1,5 @@
 <template>
-  <v-app id="inspire">
+  <v-app>
     <v-navigation-drawer clipped fixed v-model="drawer" app>
       <v-list dense>
         <v-list-tile>
@@ -16,6 +16,14 @@
           </v-list-tile-action>
           <v-list-tile-content>
             <v-list-tile-title>Settings</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+        <v-list-tile @click="logout">
+          <v-list-tile-action>
+            <v-icon>power_settings_new</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>Logout</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
@@ -37,6 +45,7 @@
 </template>
 
 <script>
+import { LOGOUT } from '@/store/types/action_types'
 import BottomNav from '@/components/atoms/BottomNav.vue'
 
 export default {
@@ -45,6 +54,12 @@ export default {
   },
   data: () => ({
     drawer: true
-  })
+  }),
+  methods: {
+    logout() {
+      this.$store.dispatch(LOGOUT)
+        .then(() => this.$router.push('/login'))
+    }
+  }
 }
 </script>

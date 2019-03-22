@@ -4,7 +4,6 @@ import { recipesColRef } from '@/firebase'
 import { createRecipe } from '@/store/models/Recipe'
 import {
   GET_RECIPES,
-  GET_RECIPES_BY_ID,
   WRITE_RECIPE,
   DELETE_RECIPE
 } from '@/store/types/action_types'
@@ -33,10 +32,11 @@ export default {
     }
   },
   actions: {
-    async [GET_RECIPES]({ commit }) {
+    async [GET_RECIPES]({ commit, rootState }) {
+      const { currentUser } = rootState.user
       commit(SET_LOADING, true)
       try {
-        await recipesColRef.orderBy('added').onSnapshot((querySnapshot) => {
+        await recipesColRef(currentUser).orderBy('added').onSnapshot((querySnapshot) => {
           const recipes = []
           querySnapshot.forEach((doc) => {
             if (doc.exists) {
@@ -53,40 +53,17 @@ export default {
         console.error(err)
       }
     },
-    /**
-     * @param [data] IDS.
-     * For now, only used to complement GET_LISTS
-     */
-    async [GET_RECIPES_BY_ID]({ commit }, data = []) {
-      try {
-        const recipes = []
-        await data.forEach((id) => {
-          recipesColRef.where('id', '==', id).get().then((snap) => {
-            snap.forEach((doc) => {
-              // doc.data() is never undefined for query doc snapshots
-              const recipe = doc.data()
-              recipes.push(recipe)
-            })
-          })
-        })
-
-        console.log('recipes in GET_RECIPES_BY_ID', recipes)
-
-        commit(SET_RECIPES, recipes)
-      } catch (err) {
-        console.error(err)
-      }
-    },
-    async [WRITE_RECIPE]({ commit }, recipe = {}) {
+    async [WRITE_RECIPE]({ commit, rootState }, recipe = {}) {
+      const { currentUser } = rootState.user
       commit(SET_LOADING, true)
       try {
         const data = createRecipe(recipe)
         const { id } = recipe
 
         if (id) {
-          await recipesColRef.doc(id).update(data)
+          await recipesColRef(currentUser).doc(id).update(data)
         } else {
-          await recipesColRef.add(data)
+          await recipesColRef(currentUser).add(data)
         }
 
         commit(SET_RECIPE, data)
@@ -95,10 +72,11 @@ export default {
         console.error(err)
       }
     },
-    async [DELETE_RECIPE]({ commit }, { id }) {
+    async [DELETE_RECIPE]({ commit, rootState }, { id }) {
+      const { currentUser } = rootState.user
       try {
         if (id) {
-          await recipesColRef.doc(id).delete()
+          await recipesColRef(currentUser).doc(id).delete()
 
           commit(RESET_RECIPE)
         }
