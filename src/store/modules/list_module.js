@@ -35,10 +35,11 @@ export default {
     }
   },
   actions: {
-    async [GET_LISTS]({ commit }) {
+    async [GET_LISTS]({ commit, rootState }) {
+      const { currentUser } = rootState.user
       commit(SET_LOADING, true)
       try {
-        await listsColRef.orderBy('edited', 'desc').onSnapshot((docs) => {
+        await listsColRef(currentUser).orderBy('edited', 'desc').onSnapshot((docs) => {
           const lists = []
           docs.forEach((doc) => {
             if (doc.exists) {
@@ -58,7 +59,8 @@ export default {
         console.error(err)
       }
     },
-    async [WRITE_LIST](context, data = {}) {
+    async [WRITE_LIST]({ rootState }, data = {}) {
+      const { currentUser } = rootState.user
       try {
         let list
         if (isEmpty(data.recipes || !data.cupboards)) {
@@ -73,20 +75,21 @@ export default {
         const { id } = data
 
         if (id) {
-          await listsColRef.doc(id).update(list)
+          await listsColRef(currentUser).doc(id).update(list)
         } else {
-          await listsColRef.add(list)
+          await listsColRef(currentUser).add(list)
         }
       } catch (err) {
         console.error(err)
       }
     },
-    async [DELETE_LIST](context, list) {
+    async [DELETE_LIST]({ rootState }, list) {
+      const { currentUser } = rootState.user
       try {
         const { id } = list
 
         // Store gets updated automatically. No need to mutate
-        await listsColRef.doc(id).delete()
+        await listsColRef(currentUser).doc(id).delete()
       } catch (err) {
         console.error(err)
       }

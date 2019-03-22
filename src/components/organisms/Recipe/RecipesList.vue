@@ -7,7 +7,7 @@
     </v-layout>
 
     <v-flex v-else-if="!recipes.length">
-      <p>You have no recipes saved... yet!</p>
+      <p class="text-center mt-3">You have no recipes saved... yet!</p>
     </v-flex>
 
     <div v-else class="masonry-container" :style="`height: ${masonryHeight}px`">
@@ -243,7 +243,11 @@ export default {
         secondColumnHeights.push(this.$refs.card[i].clientHeight)
       }
 
-      const secondColumnHeight = secondColumnHeights.reduce(reducer)
+      let secondColumnHeight = 0
+      if (!isEmpty(secondColumnHeights)) {
+        secondColumnHeight = secondColumnHeights.reduce(reducer)
+      }
+
       const derivedHeight = Math.max(firstColumnHeight, secondColumnHeight) + gutter
 
       if (derivedHeight < 500) { // images not showing mounted

@@ -20,9 +20,10 @@ export default {
   },
   getters: {},
   actions: {
-    async [GET_CUPBOARDS]({ commit }) {
+    async [GET_CUPBOARDS]({ commit, rootState }) {
+      const { currentUser } = rootState.user
       try {
-        pantryColRef.orderBy('added').onSnapshot((docs) => {
+        pantryColRef(currentUser).orderBy('added').onSnapshot((docs) => {
           const cupboardItems = []
           docs.forEach(doc => cupboardItems.push(doc.data()))
           if (!isEmpty(cupboardItems)) {
@@ -33,7 +34,8 @@ export default {
         console.error(err)
       }
     },
-    async [WRITE_CUPBOARDS](context, data) {
+    async [WRITE_CUPBOARDS]({ rootState }, data) {
+      const { currentUser } = rootState.user
       const cupboardItems = data.cupboardItems || data
       try {
         const pantry = createPantry(cupboardItems)
@@ -41,22 +43,23 @@ export default {
 
         if (Array.isArray(data)) {
           await keys.forEach((key) => {
-            pantryColRef.doc(key).set(pantry[key])
+            pantryColRef(currentUser).doc(key).set(pantry[key])
           })
         } else {
           const key = keys[0]
-          await pantryColRef.doc(key).set(pantry[key])
+          await pantryColRef(currentUser).doc(key).set(pantry[key])
         }
       } catch (err) {
         console.error(err)
       }
     },
-    async [DELETE_CUPBOARD](context, cupboardItem) {
+    async [DELETE_CUPBOARD]({ rootState }, cupboardItem) {
+      const { currentUser } = rootState.user
       try {
         const key = createPantryKey(cupboardItem.ingredient)
 
         // Store gets updated automatically. No need to mutate
-        await pantryColRef.doc(key).delete()
+        await pantryColRef(currentUser).doc(key).delete()
       } catch (err) {
         console.error(err)
       }

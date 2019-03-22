@@ -7,10 +7,10 @@ export const CLEAR_ERROR = 'clearError'
 export const SET_LOADING = 'set loading state'
 
 // User
-export const SET_USER = 'setUser'
+export const SET_USER = 'set user'
 
 // Session
-export const SET_LOGOUT = 'setLogout'
+export const SET_LOGOUT = 'set logout'
 
 // Recipe
 export const SET_RECIPE = 'set recipe item to state'
