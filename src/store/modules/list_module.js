@@ -63,7 +63,7 @@ export default {
       const { currentUser } = rootState.user
       try {
         let list
-        if (isEmpty(data.recipes || !data.cupboards)) {
+        if (isEmpty(data.recipes) || !data.cupboards) {
           list = createList({ list: data })
         } else if (typeof data.recipes[0] === 'string') {
           // list is already formatted
@@ -111,12 +111,14 @@ export default {
       state.list = list
     },
     [ADD_EXRA_LIST_ITEM](state, { item, index }) {
+      console.log(item, index)
       if (!state.list.extras) {
         // eslint-disable-next-line
         state.list.extras = [item]
       } else {
         // eslint-disable-next-line
         state.list.extras[index] = item
+        console.log(state.list.extras)
       }
     },
     [ADDED_CUPBOARD_FROM_LIST](state, cupboard) {
