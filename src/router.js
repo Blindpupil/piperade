@@ -80,18 +80,22 @@ export default new Router({
       children: [
         {
           path: '/',
+          name: 'recipes',
           component: Recipes
         },
         {
           path: 'pantry',
+          name: 'pantry',
           component: Pantry
         },
         {
           path: 'lists',
+          name: 'lists',
           component: Lists
         },
         {
           path: 'calendar',
+          name: 'calendar',
           component: Calendar
         }
       ]
