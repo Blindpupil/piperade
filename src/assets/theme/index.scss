@@ -15,6 +15,10 @@ $brand-gray-text: #696969;
   text-align: center
 }
 
+.align-end {
+  text-align: -webkit-right;
+}
+
 .capitalize {
   text-transform: capitalize
 }
