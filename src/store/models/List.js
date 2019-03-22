@@ -53,6 +53,7 @@ export function createItemsFromRecipes({ recipes = [], cupboards = [] } = {}) {
   recipes.forEach(recipe => allIngredients.push(Object.values(recipe.ingredients)))
 
   const ingredients = sumIngredientQuantities(flatten(allIngredients))
+
   const parsedIngredients = filterByIngredientsInCupboards({ ingredients, cupboards })
 
   return parsedIngredients
@@ -65,12 +66,10 @@ export function createList({ list = {}, cupboards = [] } = {}) {
   const edited = timestamp
   const createdList = {}
 
-  if (!isEmpty(recipes) && !isEmpty(cupboards)) {
+  if (!isEmpty(recipes)) {
     items = createItemsFromRecipes({ recipes, cupboards })
     Object.assign(createdList, { items })
-  }
 
-  if (!isEmpty(recipes)) {
     const recipeIds = recipes.map(recipe => recipe.id)
     Object.assign(createdList, { recipes: recipeIds })
   }

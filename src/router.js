@@ -33,7 +33,8 @@ async function requireAuth(to, from, next) {
 // This is the function that redirects to the dashboard if login worked
 async function checkForExistingSession(to, from, next) {
   try {
-    // TODO: replace for a fullpage loader
+    // TODO: replace for a fullpage loader or see if you can use 'getredirectresult'
+    // https://firebase.google.com/docs/reference/js/firebase.auth.Auth.html#getredirectresult
     // (currently stays in a whitescreen for long)
     await store.dispatch(SESSION)
     const currentUser = get(store, 'state.user.currentUser', null)
@@ -79,18 +80,22 @@ export default new Router({
       children: [
         {
           path: '/',
+          name: 'recipes',
           component: Recipes
         },
         {
           path: 'pantry',
+          name: 'pantry',
           component: Pantry
         },
         {
           path: 'lists',
+          name: 'lists',
           component: Lists
         },
         {
           path: 'calendar',
+          name: 'calendar',
           component: Calendar
         }
       ]

@@ -2,6 +2,7 @@
   <v-layout>
     <v-flex>
       <v-layout wrap align-self-baseline style="height: auto">
+        <p v-show="emptyList" class="w100 mt-3 text-center"> You haven't added any lists! </p>
         <v-flex mb-2 xs12 v-for="list in fullLists" :key="list.id">
           <ListCard :list="list" />
         </v-flex>
@@ -65,6 +66,9 @@ export default {
       })
 
       return fullLists
+    },
+    emptyList() {
+      return isEmpty(this.fullLists)
     }
   },
   created() {
