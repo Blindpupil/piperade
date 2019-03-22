@@ -2,8 +2,8 @@
   <v-dialog
     v-model="recipeItemDialog"
     transition="dialog-bottom-transition"
-    hide-overlay
     fullscreen
+    hide-overlay
     scrollable
   >
     <slot slot="activator"></slot>
@@ -31,49 +31,63 @@
         </v-flex>
       </v-toolbar>
 
-      <v-flex ma-1 min-flex v-if="recipe.categories">
-        <v-chip
-          v-for="(category, index) in recipe.categories"
-          :key="index"
-          :color="category.color"
-        >
-          {{ category.text }}
-        </v-chip>
-      </v-flex>
+      <v-card-text class="py-0">
+        <v-container class="pa-0">
+          <v-layout column align-center>
+            <!-- Categories -->
+            <v-flex w100 v-if="recipe.categories">
+              <v-chip
+                v-for="(category, index) in recipe.categories"
+                :key="index"
+                :color="category.color"
+              >
+                {{ category.text }}
+              </v-chip>
+            </v-flex>
 
-      <IngredientsTable :ingredients="Object.values(recipe.ingredients)" />
+            <v-flex w100>
+              <!-- Ingredients table -->
+              <IngredientsTable :ingredients="Object.values(recipe.ingredients)" />
+            </v-flex>
 
-      <div>
-        <v-card-title class="py-1"><h4>Instructions</h4></v-card-title>
-        <v-card-text class="py-1">
-          {{ recipe.instructions }}
-        </v-card-text>
-      </div>
+            <v-flex align-self-start class="w100">
+              <v-container>
+                <div class="body-2">Instructions</div>
+                <p class="py-1">
+                  {{ recipe.instructions }}
+                </p>
+              </v-container>
+            </v-flex>
 
-      <v-list class="pt-0">
-        <v-list-tile>
-          <span class="body-2">Duration</span>
-          <v-list-tile-content class="align-end">
-            <span>
-              {{
-                recipe.duration
-                  ? `${recipe.duration.hours}:${recipe.duration.minutes}`
-                  : '?'
-              }}
-              <v-icon class="medium-icon">access_time</v-icon>
-            </span>
-          </v-list-tile-content>
-        </v-list-tile>
+            <v-flex align-self-start class="w100">
+              <v-list class="pt-0">
+                <v-list-tile>
+                  <span class="body-2">Duration</span>
+                  <v-list-tile-content class="align-end">
+                    <span>
+                      {{
+                        recipe.duration
+                          ? `${recipe.duration.hours}:${recipe.duration.minutes}`
+                          : '?'
+                      }}
+                      <v-icon class="medium-icon">access_time</v-icon>
+                    </span>
+                  </v-list-tile-content>
+                </v-list-tile>
 
-        <v-list-tile>
-          <span class="body-2">Portions</span>
-          <v-list-tile-content class="align-end">
-            <span>
-              {{ recipe.portions }} <v-icon class="medium-icon">person</v-icon>
-            </span>
-          </v-list-tile-content>
-        </v-list-tile>
-      </v-list>
+                <v-list-tile>
+                  <span class="body-2">Portions</span>
+                  <v-list-tile-content class="align-end">
+                    <span>
+                      {{ recipe.portions }} <v-icon class="medium-icon">person</v-icon>
+                    </span>
+                  </v-list-tile-content>
+                </v-list-tile>
+              </v-list>
+            </v-flex>
+          </v-layout>
+        </v-container>
+      </v-card-text>
 
       <v-spacer></v-spacer>
       <v-divider></v-divider>
