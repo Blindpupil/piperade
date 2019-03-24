@@ -16,7 +16,7 @@ export function createRecipe(data = {}) {
 
   const formatDuration = {
     hours: duration.hours || 0,
-    minutes: duration.minutes || '?'
+    minutes: duration.minutes || ''
   }
 
   const formatedData = {

@@ -23,7 +23,7 @@ export default {
     async [GET_CUPBOARDS]({ commit, rootState }) {
       const { currentUser } = rootState.user
       try {
-        pantryColRef(currentUser).orderBy('added').onSnapshot((docs) => {
+        pantryColRef(currentUser).onSnapshot((docs) => {
           const cupboardItems = []
           docs.forEach(doc => cupboardItems.push(doc.data()))
           if (!isEmpty(cupboardItems)) {
