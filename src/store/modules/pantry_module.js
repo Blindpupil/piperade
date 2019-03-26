@@ -10,20 +10,22 @@ import {
   GET_CUPBOARDS,
   DELETE_CUPBOARD
 } from '@/store/types/action_types'
-import { SET_CUPBOARDS, REMOVE_CUPBOARD } from '@/store/types/mutation_types'
+import {
+  SET_CUPBOARDS,
+  REMOVE_CUPBOARD
+} from '@/store/types/mutation_types'
 
 export default {
   state: {
     cupboards: [],
-    unitsList: ['cloves', 'units', 'cl', 'g', 'k', 'l', 'ts', 'tbs', 'ml', 'oz', 'cups'],
-    ingredientsList: ['garlic', 'onion', 'tomato', 'red bell pepper', 'egg']
+    unitsList: ['cloves', 'units', 'g', 'k', 'ml', 'cl', 'l', 'ts', 'tbs', 'oz', 'cups']
   },
   getters: {},
   actions: {
     async [GET_CUPBOARDS]({ commit, rootState }) {
       const { currentUser } = rootState.user
       try {
-        pantryColRef(currentUser).onSnapshot((docs) => {
+        pantryColRef(currentUser).orderBy('added').onSnapshot((docs) => {
           const cupboardItems = []
           docs.forEach(doc => cupboardItems.push(doc.data()))
           if (!isEmpty(cupboardItems)) {
@@ -36,6 +38,7 @@ export default {
     },
     async [WRITE_CUPBOARDS]({ rootState }, data) {
       const { currentUser } = rootState.user
+      // Either array or object
       const cupboardItems = data.cupboardItems || data
       try {
         const pantry = createPantry(cupboardItems)

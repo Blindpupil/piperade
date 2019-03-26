@@ -30,6 +30,10 @@ export function createRecipe(data = {}) {
   return Object.freeze(formatedData)
 }
 
+export function getIngredientsNamesArray({ ingredients } = {}) {
+  return Object.keys(ingredients)
+}
+
 export function createIngredient(data = {}) {
   const {
     ingredient,

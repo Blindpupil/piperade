@@ -1,11 +1,12 @@
 import Vue from 'vue'
 import { isEmpty } from 'lodash-es'
 import { recipesColRef } from '@/firebase'
-import { createRecipe } from '@/store/models/Recipe'
+import { createRecipe, getIngredientsNamesArray } from '@/store/models/Recipe'
 import {
   GET_RECIPES,
   WRITE_RECIPE,
-  DELETE_RECIPE
+  DELETE_RECIPE,
+  WRITE_INGREDIENTS
 } from '@/store/types/action_types'
 import {
   SET_LOADING,
@@ -53,7 +54,7 @@ export default {
         console.error(err)
       }
     },
-    async [WRITE_RECIPE]({ commit, rootState }, recipe = {}) {
+    async [WRITE_RECIPE]({ commit, dispatch, rootState }, recipe = {}) {
       const { currentUser } = rootState.user
       commit(SET_LOADING, true)
       try {
@@ -65,6 +66,10 @@ export default {
         } else {
           await recipesColRef(currentUser).add(data)
         }
+
+        const ingredientsList = getIngredientsNamesArray(recipe)
+
+        dispatch(WRITE_INGREDIENTS, { ingredientsList })
 
         commit(SET_RECIPE, data)
         commit(SET_LOADING, false)

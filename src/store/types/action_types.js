@@ -30,3 +30,9 @@ export const WRITE_LIST = 'write list'
 export const DELETE_LIST = 'delete list'
 export const PARSE_LIST_ITEMS = 'parse list items from recipes and cupboards'
 export const GET_LIST_RECIPES = 'get complete recipe objects for list'
+
+/**
+ * INGREDIENTS FIELD
+ */
+export const GET_INGREDIENTS = 'get user\'s ingredients list'
+export const WRITE_INGREDIENTS = 'write to user\'s ingredients list'
