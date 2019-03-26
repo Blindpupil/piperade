@@ -1,14 +1,18 @@
 import { timestamp } from '@/firebase'
-import { flatten, isEmpty } from 'lodash-es'
+import {
+  flatten,
+  isEmpty,
+  trim
+} from 'lodash-es'
 
 const sumIngredientQuantities = (ingredients = []) => {
   const sum = []
 
   ingredients.forEach((current) => {
-    const currentIngredient = current.ingredient
+    const currentIngredient = trim(current.ingredient)
 
     const matchIndex = sum.findIndex(
-      o => (o.ingredient === currentIngredient) && (o.unit === current.unit)
+      o => (o.ingredient === currentIngredient) && (o.unit === trim(current.unit))
     )
 
     if (matchIndex === -1) {
@@ -23,6 +27,7 @@ const sumIngredientQuantities = (ingredients = []) => {
       })
     }
   })
+
   return sum
 }
 

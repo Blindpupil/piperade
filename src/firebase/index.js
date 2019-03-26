@@ -14,6 +14,8 @@ db.settings(settings)
 
 // Delete field function
 export const deleteField = () => firebase.firestore.FieldValue.delete()
+// Array field union
+export const arrayUnion = data => firebase.firestore.FieldValue.arrayUnion(...data)
 // Server time value
 export const timestamp = firebase.firestore.FieldValue.serverTimestamp()
 
@@ -26,9 +28,11 @@ export const googleProvider = new firebase.auth.GoogleAuthProvider()
 */
 // reference of Users collection
 export const usersColRef = db.collection('users')
+// reference to current user's document
+export const currentUserDoc = currentUser => usersColRef.doc(currentUser)
 // reference of Recipes collection
-export const recipesColRef = currentUser => usersColRef.doc(currentUser).collection('recipes')
+export const recipesColRef = currentUser => currentUserDoc(currentUser).collection('recipes')
 // reference of Pantry document
-export const pantryColRef = currentUser => usersColRef.doc(currentUser).collection('pantry')
+export const pantryColRef = currentUser => currentUserDoc(currentUser).collection('pantry')
 // reference for Lists collection
-export const listsColRef = currentUser => usersColRef.doc(currentUser).collection('lists')
+export const listsColRef = currentUser => currentUserDoc(currentUser).collection('lists')

@@ -58,7 +58,11 @@
 </template>
 
 <script>
-import { isEmpty } from 'lodash-es'
+import {
+  get,
+  isEmpty,
+  trim
+} from 'lodash-es'
 import { mapState } from 'vuex'
 import { SET_RECIPE } from '@/store/types/mutation_types'
 
@@ -84,7 +88,7 @@ export default {
     ...mapState({
       recipe: state => state.recipe.recipe,
       unitsList: state => state.pantry.unitsList,
-      ingredientsList: state => state.pantry.ingredientsList
+      ingredientsList: state => state.ingredient.ingredientsList
     }),
     newIngredient: {
       get() {
@@ -135,7 +139,7 @@ export default {
         const newValue = e.srcElement.value
         const property = e.srcElement.name
 
-        this.data[property] = newValue
+        this.data[property] = trim(newValue.toLowerCase())
       }
     },
     validateIngredient() {
@@ -143,7 +147,14 @@ export default {
         this.snackbar = true
 
         const ingredients = Object.assign({}, this.recipe.ingredients)
-        const ingredient = { ...this.ingredient, ...this.data }
+
+        const unit = get(this.ingredient, 'unit', 'units')
+
+        const ingredient = {
+          ...this.ingredient,
+          ...this.data,
+          unit: this.data.unit ? this.data.unit : unit
+        }
 
         const oldKey = this.ingredient ? this.ingredient.ingredient.toLowerCase() : false
         const key = this.data.ingredient ? this.data.ingredient.toLowerCase() : oldKey

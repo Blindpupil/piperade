@@ -56,7 +56,8 @@ export default {
         ingredient: this.cupboard.ingredient,
         quantity: this.cupboard.quantity,
         unit: this.cupboard.unit,
-        price: this.cupboard.price
+        price: this.cupboard.price,
+        added: this.cupboard.added
       }
     }
   },
@@ -64,7 +65,7 @@ export default {
     ...mapState({
       cupboards: state => state.pantry.cupboards,
       unitsList: state => state.pantry.unitsList,
-      ingredientsList: state => state.pantry.ingredientsList
+      ingredientsList: state => state.ingredient.ingredientsList
     }),
     ingredient: {
       get() {

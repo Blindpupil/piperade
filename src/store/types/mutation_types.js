@@ -17,10 +17,15 @@ export const SET_RECIPE = 'set recipe item to state'
 export const SET_RECIPES = 'set all recipes to state'
 export const RESET_RECIPE = 'reset recipe to initial'
 
-// Pantry (probably should be part of the user)
+// Pantry
 export const SET_CUPBOARDS = 'set pantry cupboards'
 export const SET_UNITS_LIST = 'set units list'
 export const REMOVE_CUPBOARD = 'remove cupboard item from State'
+
+// Ingredients
+export const SET_USER_INGREDIENTS = 'set complete user\'s  ingredientsList'
+export const SET_USER_INGREDIENT = 'set an ingredient in the user\'s ingredientsList'
+export const REMOVE_USER_INGREDIENT = 'remove an ingredient in the user\'s ingredientsList'
 
 // List
 export const SET_LISTS = 'set lists'

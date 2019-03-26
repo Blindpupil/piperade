@@ -18,26 +18,20 @@ export function createPantryKey(data) {
 export function createCupboardItem(data = {}) {
   const {
     ingredient,
-    quantity,
-    unit,
-    price = ''
+    quantity = '',
+    unit = '',
+    price = '',
+    added = null
   } = data
 
   return {
-    ingredient,
+    ingredient: ingredient.toLowerCase(),
     quantity,
     unit,
-    price
+    price,
+    added
   }
 }
-
-const formattedPantry = data => Object.assign({}, {
-  ingredient: data.ingredient,
-  unit: data.unit ? data.unit : '',
-  quantity: data.quantity ? data.quantity : '',
-  price: data.price ? data.price : '',
-  added: data.added ? data.added : null
-})
 
 export function createPantry(data) {
   if (isEmpty(data)) return {}
@@ -46,7 +40,7 @@ export function createPantry(data) {
   const added = new Date()
 
   if (Array.isArray(data)) {
-    const pantryArray = data.forEach(i => formattedPantry(i))
+    const pantryArray = data.forEach(i => createCupboardItem(i))
 
     pantryArray.forEach((i) => {
       if (isEmpty(i.added)) {
@@ -57,7 +51,7 @@ export function createPantry(data) {
     formattedData = keyBy(pantryArray, i => createPantryKey(i.ingredient))
   } else {
     const key = createPantryKey(data.ingredient)
-    const pantryObj = formattedPantry(data)
+    const pantryObj = createCupboardItem(data)
 
     if (isEmpty(pantryObj.added)) {
       Object.assign(pantryObj, { added })
