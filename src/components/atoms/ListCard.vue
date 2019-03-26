@@ -43,8 +43,7 @@
 </template>
 
 <script>
-import { DELETE_LIST } from '@/store/types/action_types'
-import { SET_LIST } from '@/store/types/mutation_types'
+import { PARSE_LIST_ITEMS, DELETE_LIST } from '@/store/types/action_types'
 
 import ListDialog from '@/components/organisms/List/ListDialog.vue'
 
@@ -69,7 +68,7 @@ export default {
       return timestamp ? timestamp.toDate().toDateString() : ''
     },
     setList() {
-      this.$store.commit(SET_LIST, this.list)
+      this.$store.dispatch(PARSE_LIST_ITEMS, this.list)
     },
     deleteList(list) {
       this.$store.dispatch(DELETE_LIST, list)

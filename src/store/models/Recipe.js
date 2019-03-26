@@ -16,7 +16,7 @@ export function createRecipe(data = {}) {
 
   const formatDuration = {
     hours: duration.hours || 0,
-    minutes: duration.minutes || '?'
+    minutes: duration.minutes || ''
   }
 
   const formatedData = {
@@ -28,6 +28,10 @@ export function createRecipe(data = {}) {
   }
 
   return Object.freeze(formatedData)
+}
+
+export function getIngredientsNamesArray({ ingredients } = {}) {
+  return Object.keys(ingredients)
 }
 
 export function createIngredient(data = {}) {

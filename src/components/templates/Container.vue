@@ -10,14 +10,16 @@
             <v-list-tile-title>Dashboard</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-        <v-list-tile>
-          <v-list-tile-action>
-            <v-icon>settings</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>Settings</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
+        <Settings class="w100">
+          <v-list-tile @click="{}">
+            <v-list-tile-action>
+              <v-icon>settings</v-icon>
+            </v-list-tile-action>
+            <v-list-tile-content>
+              <v-list-tile-title>Settings</v-list-tile-title>
+            </v-list-tile-content>
+          </v-list-tile>
+        </Settings>
         <v-list-tile @click="logout">
           <v-list-tile-action>
             <v-icon>power_settings_new</v-icon>
@@ -47,10 +49,12 @@
 <script>
 import { LOGOUT } from '@/store/types/action_types'
 import BottomNav from '@/components/atoms/BottomNav.vue'
+import Settings from '@/components/pages/Settings.vue'
 
 export default {
   components: {
-    BottomNav
+    BottomNav,
+    Settings
   },
   data: () => ({
     drawer: true

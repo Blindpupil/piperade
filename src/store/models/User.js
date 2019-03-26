@@ -34,7 +34,8 @@ export default function createUser(data) {
     id,
     locale,
     name,
-    picture
+    picture,
+    ingredientsList: []
   }
 }
 
@@ -47,5 +48,6 @@ export default function createUser(data) {
 //   locale: "en",
 //   name: "Cesar Martinez",
 //   picture: "https://lh4.googleusercontent.com/-gBnq_iPibFY/...",
-//   verified_email: true
+//   verified_email: true,
+//   ingredientsList: ['garlic', 'onion']
 // }

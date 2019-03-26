@@ -26,6 +26,8 @@
 import { isEmpty } from 'lodash-es'
 import { mapGetters, mapState } from 'vuex'
 
+import { CLEAR_ERROR } from '@/store/types/mutation_types'
+
 import CupboardListItem from '@/components/atoms/CupboardListItem.vue'
 
 
@@ -38,8 +40,13 @@ export default {
     ...mapState({
       cupboards: state => state.pantry.cupboards
     }),
-    validationAlert() {
-      return (!isEmpty(this.message))
+    validationAlert: {
+      get() {
+        return (!isEmpty(this.message))
+      },
+      set() {
+        this.$store.commit(CLEAR_ERROR)
+      }
     }
   }
 }
