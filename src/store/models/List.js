@@ -1,6 +1,6 @@
-import { timestamp } from '@/firebase'
 import {
   flatten,
+  keyBy,
   isEmpty,
   trim
 } from 'lodash-es'
@@ -64,19 +64,60 @@ export function createItemsFromRecipes({ recipes = [], cupboards = [] } = {}) {
   return parsedIngredients
 }
 
+export function calculateIngredientsByPortion({ recipe = {}, listPortions } = {}) {
+  const { ingredients, portions } = recipe
+  const ingredientsArray = Object.values(ingredients)
+
+  const newIngredientsArray = ingredientsArray.map((ingredient) => {
+    const { quantity } = ingredient
+    const newQuantity = (Number(quantity) * Number(listPortions)) / Number(portions)
+
+    return {
+      ...ingredient,
+      quantity: newQuantity
+    }
+  })
+
+  const newIngredientsObject = keyBy(newIngredientsArray, i => i.ingredient.toLowerCase())
+
+  return {
+    ...recipe,
+    ingredients: newIngredientsObject,
+    portions: listPortions,
+    listPortions
+  }
+}
+
+export function createFullList({ list = {}, cupboards = [] } = {}) {
+  const { recipes } = list
+  let { items } = list
+
+  const createdList = {}
+
+  if (!isEmpty(recipes)) {
+    items = createItemsFromRecipes({ recipes, cupboards })
+    Object.assign(createdList, { items })
+  }
+
+  return {
+    ...list,
+    ...createdList
+  }
+}
+
 export function createList({ list = {}, cupboards = [] } = {}) {
   const { recipes } = list
   let { items } = list
 
-  const edited = timestamp
+  const edited = new Date().toDateString()
   const createdList = {}
 
   if (!isEmpty(recipes)) {
     items = createItemsFromRecipes({ recipes, cupboards })
     Object.assign(createdList, { items })
 
-    const recipeIds = recipes.map(recipe => recipe.id)
-    Object.assign(createdList, { recipes: recipeIds })
+    const fbRecipes = recipes.map(recipe => ({ id: recipe.id, listPortions: recipe.portions }))
+    Object.assign(createdList, { recipes: fbRecipes })
   }
 
   return {
@@ -87,13 +128,16 @@ export function createList({ list = {}, cupboards = [] } = {}) {
 }
 
 // LIST DOCUMENT EXAMPLE (and how it's stored in FS)
-// const Users = {  // Users Collection
-//   userId: {  // Document
-//     lists: [  // Collection
+// const Users = { // Users Collection
+//   userId: { // Document
+//     lists: [ // Collection
 //       {
 //         edited: Date,
 //         name: 'list name',
-//         recipes: [ 'recipeIdString', 'otherRecipeIdString' ],
+//         recipes: [{
+//           id: 'recipeIdString',
+//           listPortions: Number
+//         }],
 //         items: [
 //           {
 //             ingredient: 'name',

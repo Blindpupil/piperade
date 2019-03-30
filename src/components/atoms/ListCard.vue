@@ -4,7 +4,7 @@
       <ListDialog>
         <div class="headline">{{ list.name }}</div>
         <p class="text-brand-gray">
-          {{ date(list.edited) }}
+          {{ list.edited }}
         </p>
         <span v-if="recipeNames" class="pr-1 capitalize">
           {{ recipeNames }}
@@ -43,7 +43,8 @@
 </template>
 
 <script>
-import { PARSE_LIST_ITEMS, DELETE_LIST } from '@/store/types/action_types'
+import { SET_LIST } from '@/store/types/mutation_types'
+import { DELETE_LIST } from '@/store/types/action_types'
 
 import ListDialog from '@/components/organisms/List/ListDialog.vue'
 
@@ -64,11 +65,8 @@ export default {
     }
   },
   methods: {
-    date(timestamp) {
-      return timestamp ? timestamp.toDate().toDateString() : ''
-    },
     setList() {
-      this.$store.dispatch(PARSE_LIST_ITEMS, this.list)
+      this.$store.commit(SET_LIST, this.list)
     },
     deleteList(list) {
       this.$store.dispatch(DELETE_LIST, list)
