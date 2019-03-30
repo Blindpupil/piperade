@@ -26,7 +26,7 @@
 
 <script>
 import { isEmpty } from 'lodash-es'
-import { mapState } from 'vuex'
+import { mapGetters } from 'vuex'
 
 import { RESET_LIST } from '@/store/types/mutation_types'
 
@@ -45,28 +45,7 @@ export default {
     }
   },
   computed: {
-    ...mapState({
-      lists: state => state.list.lists,
-      recipes: state => state.recipe.recipes
-    }),
-    fullLists() {
-      const { lists, recipes } = this
-
-      const fullLists = lists.map((list) => {
-        let listRecipes = []
-
-        if (!isEmpty(list.recipes)) {
-          listRecipes = recipes.filter(recipe => list.recipes.includes(recipe.id))
-        }
-
-        return {
-          ...list,
-          recipes: listRecipes
-        }
-      })
-
-      return fullLists
-    },
+    ...mapGetters(['fullLists']),
     emptyList() {
       return isEmpty(this.fullLists)
     }

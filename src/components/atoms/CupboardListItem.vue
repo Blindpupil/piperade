@@ -41,7 +41,7 @@
 import { isEmpty } from 'lodash-es'
 import { mapState, mapMutations } from 'vuex'
 
-import { REMOVE_CUPBOARD, SET_ERROR } from '@/store/types/mutation_types'
+import { REMOVE_CUPBOARD, SET_ERROR, CLEAR_ERROR } from '@/store/types/mutation_types'
 import { WRITE_CUPBOARDS, DELETE_CUPBOARD } from '@/store/types/action_types'
 
 
@@ -95,9 +95,13 @@ export default {
       }
     }
   },
+  created() {
+    this.clearError()
+  },
   methods: {
     ...mapMutations({
-      setError: SET_ERROR
+      setError: SET_ERROR,
+      clearError: CLEAR_ERROR
     }),
     handleChange() {
       const { pantry } = this
