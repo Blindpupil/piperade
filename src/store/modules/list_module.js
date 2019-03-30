@@ -1,12 +1,17 @@
 import Vue from 'vue'
 import { isEmpty } from 'lodash-es'
 import { listsColRef } from '@/firebase'
-import { createList } from '@/store/models/List'
+import {
+  createList,
+  createFullList,
+  calculateIngredientsByPortion
+} from '@/store/models/List'
 import {
   GET_LISTS,
   WRITE_LIST,
   DELETE_LIST,
-  PARSE_LIST_ITEMS
+  PARSE_LIST_ITEMS,
+  PARSE_LIST_PORTIONS
 } from '@/store/types/action_types'
 import {
   SET_LIST,
@@ -25,13 +30,43 @@ export default {
     lists: []
   },
   getters: {
-    listRecipesNames: (state) => {
-      const names = []
+    fullLists: (state, getters, rootState) => {
+      const { lists } = state
+      const { recipes } = rootState.recipe
+      const { cupboards } = rootState.pantry
 
-      if (!isEmpty(state.list.recipes)) {
-        state.list.recipes.forEach(recipe => names.push(recipe.name))
-      }
-      return names
+      const fullLists = lists.map((list) => {
+        const listRecipes = []
+        let parsedListRecipes = []
+
+        if (!isEmpty(list.recipes)) {
+          list.recipes.forEach((recipe) => {
+            const { id, listPortions } = recipe
+            // find in the Recipes collection the ones with the ids saved in the list
+            const match = recipes.find(r => r.id === id)
+            match.listPortions = listPortions
+            listRecipes.push(match)
+          })
+
+          parsedListRecipes = listRecipes.map((recipe) => {
+            let result = recipe
+            if (!recipe.listPortions) return result
+            if (recipe.portions !== recipe.listPortions) {
+              result = calculateIngredientsByPortion({ recipe, listPortions: recipe.listPortions })
+            }
+            return result
+          })
+        }
+
+        const parsedList = {
+          ...list,
+          recipes: parsedListRecipes
+        }
+
+        return createFullList({ list: parsedList, cupboards })
+      })
+
+      return fullLists
     }
   },
   actions: {
@@ -83,13 +118,13 @@ export default {
         console.error(err)
       }
     },
-    async [DELETE_LIST]({ rootState }, list) {
+    async [DELETE_LIST]({ commit, rootState }, list) {
       const { currentUser } = rootState.user
       try {
         const { id } = list
 
-        // Store gets updated automatically. No need to mutate
         await listsColRef(currentUser).doc(id).delete()
+        commit(SET_LIST, {})
       } catch (err) {
         console.error(err)
       }
@@ -99,6 +134,27 @@ export default {
       const parsedList = createList({ list, cupboards })
 
       commit(SET_LIST, parsedList)
+    },
+    [PARSE_LIST_PORTIONS]({ commit, rootState }, { list, recipe, listPortions } = {}) {
+      const parsedRecipe = calculateIngredientsByPortion({ recipe, listPortions })
+      const recipeIndex = list.recipes.findIndex(item => item.id === parsedRecipe.id)
+      const recipes = [...list.recipes]
+      recipes[recipeIndex] = parsedRecipe
+
+      const newList = {
+        ...list,
+        recipes
+      }
+
+      const { cupboards } = rootState.pantry
+      const parsedList = createFullList({ list: newList, cupboards })
+
+      commit(SET_LIST, parsedList)
+
+      // const { id } = parsedList
+      // const listIndex = rootState.list.lists.findIndex(i => i.id === id)
+      // const lists = [...rootState.list.lists]
+      // lists[listIndex] = parsedList
     }
   },
   mutations: {

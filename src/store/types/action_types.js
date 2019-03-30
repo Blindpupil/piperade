@@ -29,7 +29,7 @@ export const GET_LISTS = 'get lists'
 export const WRITE_LIST = 'write list'
 export const DELETE_LIST = 'delete list'
 export const PARSE_LIST_ITEMS = 'parse list items from recipes and cupboards'
-export const GET_LIST_RECIPES = 'get complete recipe objects for list'
+export const PARSE_LIST_PORTIONS = 'parse list recipe from a new portion'
 
 /**
  * INGREDIENTS FIELD

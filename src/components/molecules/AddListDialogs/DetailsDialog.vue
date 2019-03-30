@@ -22,16 +22,15 @@
               <v-subheader class="pa-0">
                 Ingredients in recipes
                 <v-spacer></v-spacer>
-
                 <AddRecipesToListDialog :list="list">
-                  <v-btn color="primary" fab small>
-                    <v-icon>add</v-icon>
+                  <v-btn color="primary" class="mx-0" small>
+                    Add Recipe
                   </v-btn>
                 </AddRecipesToListDialog>
               </v-subheader>
 
               <!-- List items view -->
-              <ListRecipes :listRecipes="list.recipes" />
+              <ListRecipes :list="list" />
             </v-flex>
 
             <v-flex align-self-start class="w100">
@@ -45,8 +44,8 @@
                 Other items you may need
                 <v-spacer></v-spacer>
 
-                <v-btn @click="addExtra" color="primary" fab small>
-                  <v-icon>add</v-icon>
+                <v-btn @click="addExtra" color="primary" class="mx-0" small>
+                  Add Item
                 </v-btn>
               </v-subheader>
 
@@ -101,7 +100,8 @@ export default {
   },
   computed: {
     ...mapState({
-      list: state => state.list.list
+      list: state => state.list.list,
+      recipes: state => state.recipe.recipes
     })
   },
   methods: {
