@@ -34,6 +34,34 @@ export function getIngredientsNamesArray({ ingredients } = {}) {
   return Object.keys(ingredients)
 }
 
+export function filterRecipeByPantry({ recipe = {}, cupboards = [] } = {}) {
+  const result = []
+  const ingredients = Object.values(recipe.ingredients)
+
+  ingredients.forEach((item) => {
+    const match = cupboards.find(
+      cupboard => (cupboard.ingredient === item.ingredient) && (cupboard.unit === item.unit)
+    )
+
+    const missing = match ? Number(item.quantity) - Number(match.quantity) : item.quantity
+    const obtained = missing <= 0
+
+    result.push({
+      ...item,
+      missing,
+      obtained
+    })
+  })
+
+  const ingredientsObtained = result.filter(i => i.obtained).length
+
+  return {
+    ...recipe,
+    ingredients: result,
+    ingredientsObtained
+  }
+}
+
 export function createIngredient(data = {}) {
   const {
     ingredient,

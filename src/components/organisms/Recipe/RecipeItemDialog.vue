@@ -47,7 +47,7 @@
 
             <v-flex w100>
               <!-- Ingredients table -->
-              <IngredientsTable :ingredients="Object.values(recipe.ingredients)" />
+              <IngredientsTable :ingredients="recipe.ingredients" />
             </v-flex>
 
             <v-flex align-self-start class="w100">
@@ -65,11 +65,7 @@
                   <span class="body-2">Duration</span>
                   <v-list-tile-content class="align-end">
                     <span>
-                      {{
-                        recipe.duration
-                          ? `${recipe.duration.hours}:${recipe.duration.minutes}`
-                          : '?'
-                      }}
+                      {{ durationText(recipe.duration) }}
                       <v-icon class="medium-icon">access_time</v-icon>
                     </span>
                   </v-list-tile-content>
@@ -122,6 +118,11 @@ export default {
   methods: {
     close() {
       this.recipeItemDialog = false
+    },
+    durationText(duration) {
+      const hours = duration.hours > 0 ? `${duration.hours}h ` : ''
+      const minutes = duration.minutes > 0 ? `${duration.minutes}mins` : ''
+      return hours + minutes
     },
     setRecipe(recipe) {
       this.$store.commit(SET_RECIPE, recipe)
