@@ -36,6 +36,7 @@ export default {
         console.error(err)
       }
     },
+    // TODO: bug after deleting pantry item and editing a different one.
     async [WRITE_CUPBOARDS]({ rootState }, data) {
       const { currentUser } = rootState.user
       // Either array or object
