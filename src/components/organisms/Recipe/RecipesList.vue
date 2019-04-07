@@ -12,7 +12,7 @@
 
     <div v-else class="masonry-container" :style="`height: ${masonryHeight}px`">
       <div
-        v-for="recipe in recipes"
+        v-for="recipe in recipesFilteredByPantry"
         :key="recipe.id"
         ref="card"
         class="masonry-item"
@@ -34,30 +34,26 @@
                     {{ recipe.portions ? recipe.portions : '?' }}
                   </span>
                 </div>
-                <div class="px-2">
+                <div class="pl-2">
                   <v-icon class="small-icon">access_time</v-icon>
-                  <span class="text-brand-gray">
-                    {{
-                      recipe.duration
-                        ? `${recipe.duration.hours}:${recipe.duration.minutes}`
-                        : '?'
-                    }}
+                  <span class="text-brand-gray" v-text="durationText(recipe.duration)">
                   </span>
                 </div>
-                <div>
+                <!-- <div>
                   <v-icon class="small-icon">payment</v-icon>
                   <span class="text-brand-gray">
                     {{ recipe.price ? recipe.price : '?€' }}
                   </span>
-                </div>
+                </div> -->
               </v-layout>
-
               <v-card-title primary-title>
-                <div>
-                  <div class="recipe-card-title">{{ recipe.name }}</div>
-                  <div class="multiline-ellipsis">
-                    <p class="text-brand-gray">{{ categoriesString(recipe) }}</p>
-                  </div>
+                <div class="w100" :class="missingIngredientsColor(recipe)">
+                  <v-icon class="small-icon pr-1">add_shopping_cart</v-icon>
+                  <span>{{ missingIngredientsString(recipe) }}</span>
+                </div>
+                <div class="recipe-card-title w100">{{ recipe.name }}</div>
+                <div class="multiline-ellipsis">
+                  <p class="text-brand-gray">{{ categoriesString(recipe) }}</p>
                 </div>
               </v-card-title>
             </div>
@@ -73,22 +69,17 @@
                       {{ recipe.portions ? recipe.portions : '?' }}
                     </span>
                   </div>
-                  <div class="px-2">
+                  <div v-show="recipe.duration" class="pl-2">
                     <v-icon class="small-icon">access_time</v-icon>
-                    <span class="text-brand-gray">
-                      {{
-                        recipe.duration
-                          ? `${recipe.duration.hours}:${recipe.duration.minutes}`
-                          : '?'
-                      }}
+                    <span class="text-brand-gray" v-text="durationText(recipe.duration)">
                     </span>
                   </div>
-                  <div>
+                  <!-- <div>
                     <v-icon class="small-icon">payment</v-icon>
                     <span class="text-brand-gray">
                       {{ recipe.price ? recipe.price : '?€' }}
                     </span>
-                  </div>
+                  </div> -->
                 </v-layout>
 
                 <div class="multiline-ellipsis">
@@ -159,7 +150,7 @@
 
 <script>
 import { isEmpty } from 'lodash-es'
-import { mapState } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
 
 import { SET_RECIPE } from '@/store/types/mutation_types'
 import { DELETE_RECIPE } from '@/store/types/action_types'
@@ -188,7 +179,8 @@ export default {
     ...mapState({
       recipes: state => state.recipe.recipes,
       isLoading: state => state.loading.isLoading
-    })
+    }),
+    ...mapGetters(['recipesFilteredByPantry'])
   },
   methods: {
     categoriesString({ categories }) {
@@ -203,6 +195,11 @@ export default {
     deleteRecipe(recipe) {
       this.$store.dispatch(DELETE_RECIPE, recipe)
       this.getDerivedMasonryHeight()
+    },
+    durationText(duration) {
+      const hours = duration.hours > 0 ? `${duration.hours}h ` : ''
+      const minutes = duration.minutes > 0 ? `${duration.minutes}m` : ''
+      return hours + minutes
     },
     getInitialMasonryHeight() {
       if (isEmpty(this.recipes)) return null
@@ -262,6 +259,23 @@ export default {
     },
     imageLoad() {
       this.getDerivedMasonryHeight()
+    },
+    missingIngredientsColor({ ingredients, ingredientsObtained }) {
+      const total = ingredients.length
+      let color
+      if (ingredientsObtained / total === 1) {
+        color = 'success--text'
+      } else if (ingredientsObtained / total > 0.4) {
+        color = 'warning--text'
+      } else {
+        color = 'error--text'
+      }
+
+      return color
+    },
+    missingIngredientsString({ ingredients, ingredientsObtained }) {
+      const total = ingredients.length
+      return `${ingredientsObtained} / ${total}`
     },
     setRecipe(recipe) {
       this.$store.commit(SET_RECIPE, recipe)

@@ -131,9 +131,37 @@ export default {
     },
     [PARSE_LIST_ITEMS]({ commit, rootState }, list) {
       const { cupboards } = rootState.pantry
-      const parsedList = createList({ list, cupboards })
+      const { recipes } = rootState.recipe
 
-      commit(SET_LIST, parsedList)
+      // TODO: this is duplicated in the fullList getter.
+      // Extract it as an exported module function
+      const listRecipes = []
+      let parsedListRecipes = []
+
+      list.recipes.forEach((recipe) => {
+        const { id, listPortions, portions } = recipe
+        // find in the Recipes collection the ones with the ids saved in the list
+        const match = recipes.find(r => r.id === id)
+        if (!listPortions) match.listPortions = portions
+        listRecipes.push(match)
+      })
+
+      parsedListRecipes = listRecipes.map((recipe) => {
+        let result = recipe
+        if (!recipe.listPortions) return result
+        if (recipe.portions !== recipe.listPortions) {
+          result = calculateIngredientsByPortion({ recipe, listPortions: recipe.listPortions })
+        }
+        return result
+      })
+
+      const parsedList = createList({ list, cupboards })
+      const parsedListWithRecipes = {
+        ...parsedList,
+        recipes: parsedListRecipes
+      }
+
+      commit(SET_LIST, parsedListWithRecipes)
     },
     [PARSE_LIST_PORTIONS]({ commit, rootState }, { list, recipe, listPortions } = {}) {
       const parsedRecipe = calculateIngredientsByPortion({ recipe, listPortions })

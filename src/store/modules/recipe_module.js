@@ -1,7 +1,11 @@
 import Vue from 'vue'
 import { isEmpty } from 'lodash-es'
 import { recipesColRef } from '@/firebase'
-import { createRecipe, getIngredientsNamesArray } from '@/store/models/Recipe'
+import {
+  createRecipe,
+  filterRecipeByPantry,
+  getIngredientsNamesArray
+} from '@/store/models/Recipe'
 import {
   GET_RECIPES,
   WRITE_RECIPE,
@@ -24,12 +28,22 @@ export default {
     recipeCategories: state => state.recipe.categories,
     recipeIngredients: (state) => {
       const ingredientsObj = state.recipe.ingredients
-      const ingredientsArray = []
+      let ingredientsArray = []
+
       if (!isEmpty(ingredientsObj)) {
-        Object.keys(ingredientsObj)
-          .forEach(key => ingredientsArray.push(ingredientsObj[key]))
+        ingredientsArray = Object.values(ingredientsObj)
       }
       return ingredientsArray
+    },
+    recipesFilteredByPantry: (state, getters, rootState) => {
+      const { cupboards } = rootState.pantry
+      const filteredRecipes = []
+
+      state.recipes.forEach((recipe) => {
+        const filtered = filterRecipeByPantry({ recipe, cupboards })
+        filteredRecipes.push(filtered)
+      })
+      return filteredRecipes
     }
   },
   actions: {
