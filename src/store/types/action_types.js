@@ -17,6 +17,7 @@ export const DELETE_RECIPE = 'delete recipe'
 /**
  * PANTRY COLLECTION
  */
+export const WRITE_PANTRY = 'write single cupboard item'
 export const WRITE_CUPBOARDS = 'write user cupboard items'
 export const GET_CUPBOARDS = 'get user cupboard items'
 export const DELETE_CUPBOARD = 'delete an ingredient from Pantry'

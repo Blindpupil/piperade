@@ -42,7 +42,7 @@ import { isEmpty } from 'lodash-es'
 import { mapState, mapMutations } from 'vuex'
 
 import { REMOVE_CUPBOARD, SET_ERROR, CLEAR_ERROR } from '@/store/types/mutation_types'
-import { WRITE_CUPBOARDS, DELETE_CUPBOARD } from '@/store/types/action_types'
+import { WRITE_PANTRY, DELETE_CUPBOARD } from '@/store/types/action_types'
 
 
 export default {
@@ -72,8 +72,10 @@ export default {
         return this.cupboard.ingredient
       },
       set(ingredient) {
-        this.pantry.ingredient = ingredient.toLowerCase()
-        this.handleChange()
+        if (!isEmpty(ingredient)) {
+          this.pantry.ingredient = ingredient.toLowerCase()
+          this.handleChange()
+        }
       }
     },
     quantity: {
@@ -81,8 +83,10 @@ export default {
         return this.cupboard.quantity
       },
       set(quantity) {
-        this.pantry.quantity = quantity
-        this.handleChange()
+        if (!isEmpty(quantity)) {
+          this.pantry.quantity = quantity
+          this.handleChange()
+        }
       }
     },
     unit: {
@@ -90,8 +94,10 @@ export default {
         return this.cupboard.unit
       },
       set(unit) {
-        this.pantry.unit = unit
-        this.handleChange()
+        if (!isEmpty(unit)) {
+          this.pantry.unit = unit
+          this.handleChange()
+        }
       }
     }
   },
@@ -126,7 +132,7 @@ export default {
         })
       }
 
-      if (valid) this.$store.dispatch(WRITE_CUPBOARDS, pantry)
+      if (valid) this.$store.dispatch(WRITE_PANTRY, pantry)
     },
     removeItem() {
       // handle removing empty item

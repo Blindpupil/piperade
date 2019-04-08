@@ -7,6 +7,7 @@ import {
 } from '@/store/models/Pantry'
 import {
   WRITE_CUPBOARDS,
+  WRITE_PANTRY,
   GET_CUPBOARDS,
   DELETE_CUPBOARD
 } from '@/store/types/action_types'
@@ -36,10 +37,20 @@ export default {
         console.error(err)
       }
     },
-    // TODO: bug after deleting pantry item and editing a different one.
+    async [WRITE_PANTRY]({ rootState }, data = {}) {
+      const { currentUser } = rootState.user
+      try {
+        const pantry = createPantry(data)
+        const keys = Object.keys(pantry)
+
+        const key = keys[0]
+        await pantryColRef(currentUser).doc(key).set(pantry[key])
+      } catch (err) {
+        console.error(err)
+      }
+    },
     async [WRITE_CUPBOARDS]({ rootState }, data) {
       const { currentUser } = rootState.user
-      // Either array or object
       const cupboardItems = data.cupboardItems || data
       try {
         const pantry = createPantry(cupboardItems)
@@ -49,9 +60,6 @@ export default {
           await keys.forEach((key) => {
             pantryColRef(currentUser).doc(key).set(pantry[key])
           })
-        } else {
-          const key = keys[0]
-          await pantryColRef(currentUser).doc(key).set(pantry[key])
         }
       } catch (err) {
         console.error(err)

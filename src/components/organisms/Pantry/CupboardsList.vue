@@ -6,7 +6,7 @@
 
     <CupboardListItem
       v-for="(cupboard, index) in cupboards"
-      :key="index"
+      :key="`${index}${cupboard.ingredient}`"
       :cupboard="cupboard"
     ></CupboardListItem>
 
