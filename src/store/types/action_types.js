@@ -6,6 +6,7 @@ export const GOOGLE_AUTH = 'authenticate with google'
 export const HANDLE_PROVIDER_RESPONSE = 'handle auth response from provider'
 export const LOGOUT = 'logout'
 export const SAVE_USER = 'save user to firebase'
+export const GET_USER_DETAILS = 'get user details from firebase'
 
 /**
  * RECIPES COLLECTION
