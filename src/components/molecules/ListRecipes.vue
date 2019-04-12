@@ -26,7 +26,7 @@
 
         <v-card flat>
           <v-card-text style="padding: 10px">
-            <IngredientsTable headless flat :ingredients="Object.values(recipe.ingredients)"/>
+            <IngredientsTable headless flat :ingredients="recipe.ingredients"/>
           </v-card-text>
         </v-card>
       </v-expansion-panel-content>
@@ -35,8 +35,6 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-
 import IngredientsTable from '@/components/atoms/IngredientsTable.vue'
 import ListRecipePortionsDialog from '@/components/molecules/ListRecipePortionsDialog.vue'
 
@@ -48,11 +46,6 @@ export default {
   components: {
     IngredientsTable,
     ListRecipePortionsDialog
-  },
-  computed: {
-    ...mapState({
-      recipes: state => state.recipe.recipes
-    })
   }
 }
 </script>

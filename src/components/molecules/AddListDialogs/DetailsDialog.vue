@@ -24,7 +24,7 @@
                 <v-spacer></v-spacer>
                 <AddRecipesToListDialog :list="list">
                   <v-btn color="primary" class="mx-0" small>
-                    Add Recipe
+                    Set Recipes
                   </v-btn>
                 </AddRecipesToListDialog>
               </v-subheader>

@@ -26,7 +26,7 @@
       <v-card-text>
         <v-container grid-list-sm>
           <v-layout wrap>
-            <v-flex v-for="i in 6" :key="`2${i}`" @click="handleChange(i)" xs2>
+            <v-flex v-for="i in 6" :key="`2${i}`" @click="handleChange(i)" class="clickable" xs2>
               <v-card flat :color="i == portions ? 'primary lighten-1' : 'grey lighten-4'">
                 <v-card-text
                   :class="i == portions ? 'text-white' : 'text-brand-gray'"

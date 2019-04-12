@@ -9,6 +9,7 @@
     "start": "npm run serve"
   },
   "dependencies": {
+    "convert-units": "^2.3.4",
     "firebase": "^5.7.2",
     "lodash-es": "^4.17.11",
     "vue": "^2.5.21",

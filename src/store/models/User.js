@@ -40,6 +40,13 @@ export default function createUser(data) {
 }
 
 // FB-READY USER OBJECT EXAMPLE
+// Collections
+// {
+//   pantry,
+//   lists,
+//   recipes
+// }
+// Fields
 // {
 //   email: "cesar@gmail.com",
 //   family_name: "Martinez",
