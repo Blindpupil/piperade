@@ -1,6 +1,5 @@
 import {
   flatten,
-  keyBy,
   isEmpty,
   trim
 } from 'lodash-es'
@@ -78,16 +77,41 @@ export function calculateIngredientsByPortion({ recipe = {}, listPortions } = {}
     }
   })
 
-  const newIngredientsObject = keyBy(newIngredientsArray, i => i.ingredient.toLowerCase())
-
   return {
     ...recipe,
-    ingredients: newIngredientsObject,
+    ingredients: newIngredientsArray,
     portions: listPortions,
     listPortions
   }
 }
 
+export function parseListRecipes({ list = {}, recipes = [] } = {}) {
+  const listRecipes = []
+
+  if (isEmpty(list.recipes)) return []
+
+  list.recipes.forEach((recipe) => {
+    const { id, listPortions } = recipe
+    // find in the Recipes collection the ones with the ids saved in the list
+    const match = recipes.find(r => r.id === id)
+    // copy the listPortions from the list to the recipe found
+    match.listPortions = listPortions
+    listRecipes.push(match)
+  })
+
+  return listRecipes.map((recipe) => {
+    let result = recipe
+    if (!recipe.listPortions) return result // recipe doesn't need recalculation
+
+    if (recipe.portions !== recipe.listPortions) {
+      result = calculateIngredientsByPortion({ recipe, listPortions: recipe.listPortions })
+    }
+
+    return result
+  })
+}
+
+// TODO: better naming: `createFullList` returns a Store ready object
 export function createFullList({ list = {}, cupboards = [] } = {}) {
   const { recipes } = list
   let { items } = list
@@ -105,6 +129,7 @@ export function createFullList({ list = {}, cupboards = [] } = {}) {
   }
 }
 
+// TODO: better naming: `createList` returns a FB ready object
 export function createList({ list = {}, cupboards = [] } = {}) {
   const { recipes } = list
   let { items } = list
@@ -126,6 +151,7 @@ export function createList({ list = {}, cupboards = [] } = {}) {
     edited
   }
 }
+
 
 // LIST DOCUMENT EXAMPLE (and how it's stored in FS)
 // const Users = { // Users Collection

@@ -1,4 +1,20 @@
-import { keyBy } from 'lodash-es'
+import { isEmpty, keyBy } from 'lodash-es'
+
+export function createIngredient(data = {}) {
+  const {
+    ingredient,
+    quantity,
+    unit,
+    price = ''
+  } = data
+
+  return {
+    ingredient: ingredient.toLowerCase(),
+    quantity,
+    unit,
+    price
+  }
+}
 
 export function createRecipe(data = {}) {
   const {
@@ -8,13 +24,18 @@ export function createRecipe(data = {}) {
     name
   } = data
   const lowerName = name.toLowerCase()
-  const ingredientsObj = ingredients
-    ? keyBy(ingredients, i => i.ingredient.toLowerCase())
-    : {}
+
+  let ingredientsObj = ingredients || {}
+
+  if (!isEmpty(ingredients) && Array.isArray(ingredients)) {
+    const formatedIngredients = ingredients.map(i => createIngredient(i))
+
+    ingredientsObj = keyBy(formatedIngredients, i => i.ingredient.toLowerCase())
+  }
 
   const date = added || new Date()
 
-  const formatDuration = {
+  const formatedDuration = {
     hours: duration.hours || 0,
     minutes: duration.minutes || ''
   }
@@ -22,10 +43,12 @@ export function createRecipe(data = {}) {
   const formatedData = {
     ...data,
     added: date,
-    duration: formatDuration,
+    duration: formatedDuration,
     name: lowerName,
     ingredients: ingredientsObj
   }
+
+  if (data.id) Object.assign(formatedData, { id: data.id })
 
   return Object.freeze(formatedData)
 }
@@ -59,22 +82,6 @@ export function filterRecipeByPantry({ recipe = {}, cupboards = [] } = {}) {
     ...recipe,
     ingredients: result,
     ingredientsObtained
-  }
-}
-
-export function createIngredient(data = {}) {
-  const {
-    ingredient,
-    quantity,
-    unit,
-    price = ''
-  } = data
-
-  return {
-    ingredient: ingredient.toLowerCase(),
-    quantity,
-    unit,
-    price
   }
 }
 

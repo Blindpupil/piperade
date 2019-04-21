@@ -19,7 +19,7 @@ import {
 export default {
   state: {
     cupboards: [],
-    unitsList: ['cloves', 'units', 'g', 'k', 'ml', 'cl', 'l', 'ts', 'tbs', 'oz', 'cups']
+    unitsList: ['cloves', 'units', 'g', 'kg', 'oz', 'lb', 'ml', 'cl', 'l', 'tsp', 'Tbs', 'cups']
   },
   getters: {},
   actions: {

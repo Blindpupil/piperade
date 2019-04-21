@@ -8,6 +8,7 @@ export const SET_LOADING = 'set loading state'
 
 // User
 export const SET_USER = 'set user'
+export const SET_USER_DETAILS = 'set user details'
 
 // Session
 export const SET_LOGOUT = 'set logout'

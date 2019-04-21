@@ -9,10 +9,13 @@
         v-for="ingredient in ingredients"
         :key="ingredient.ingredient"
       >
-        <v-list-tile-content>
+        <v-list-tile-content :class="{'success--text': ingredient.obtained}">
           {{ ingredient.ingredient }}
         </v-list-tile-content>
-        <v-list-tile-content class="align-end blue-grey--text">
+        <v-list-tile-content
+          :class="ingredient.obtained ? 'success--text' : 'blue-grey--text'"
+          class="align-end"
+        >
           {{ ingredient.quantity }} {{ ingredient.unit }}
         </v-list-tile-content>
       </v-list-tile>

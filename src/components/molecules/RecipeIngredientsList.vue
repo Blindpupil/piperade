@@ -20,21 +20,16 @@
         <v-list two-line class="py-0">
           <v-list-tile
             :key="ingredient.ingredient"
-            @click="toggle(index)"
             avatar ripple
           >
             <v-list-tile-content>
-              <v-list-tile-title
-                :class="(selected.indexOf(index) < 0) ? '' : 'success--text'"
-              >
+              <v-list-tile-title>
                 {{ ingredient.ingredient }}
               </v-list-tile-title>
             </v-list-tile-content>
 
             <v-list-tile-action class="ingredient-quantity">
-              <v-list-tile-action-text
-                :class="(selected.indexOf(index) < 0) ? '' : 'success--text'"
-              >
+              <v-list-tile-action-text>
                 {{ ingredient.quantity }} {{ ingredient.unit }}
               </v-list-tile-action-text>
             </v-list-tile-action>
@@ -58,10 +53,6 @@
 <script>
 import { mapGetters, mapState } from 'vuex'
 import { SET_RECIPE } from '@/store/types/mutation_types'
-import {
-  DELETE_CUPBOARD,
-  WRITE_CUPBOARDS
-} from '@/store/types/action_types'
 
 import WriteIngredientDialog from '@/components/molecules/WriteIngredientDialog.vue'
 
@@ -75,11 +66,6 @@ export default {
       recipe: state => state.recipe.recipe
     })
   },
-  data() {
-    return {
-      selected: []
-    }
-  },
   methods: {
     removeIngredient(index) {
       const ingredients = this.recipeIngredients
@@ -90,23 +76,6 @@ export default {
         ingredients
       }
       this.$store.commit(SET_RECIPE, recipe)
-    },
-    toggle(index) {
-      const i = this.selected.indexOf(index)
-
-      if (i > -1) {
-        this.selected.splice(i, 1)
-
-        this.$store.dispatch(DELETE_CUPBOARD, this.ingredients[index])
-      } else {
-        this.$emit('added:cupboard')
-        this.selected.push(index)
-
-        this.$store.dispatch(WRITE_CUPBOARDS, {
-          cupboardItems: this.ingredients[index],
-          isNew: false
-        })
-      }
     }
   }
 }

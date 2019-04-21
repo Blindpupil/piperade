@@ -2,6 +2,7 @@ import { get, isEmpty } from 'lodash-es'
 import {
   auth,
   usersColRef,
+  currentUserDoc,
   googleProvider
 } from '@/firebase'
 import createUser from '@/store/models/User'
@@ -10,10 +11,12 @@ import {
   LOGOUT,
   GOOGLE_AUTH,
   HANDLE_PROVIDER_RESPONSE,
-  SAVE_USER
+  SAVE_USER,
+  GET_USER_DETAILS
 } from '@/store/types/action_types'
 import {
   SET_USER,
+  SET_USER_DETAILS,
   SET_ERROR,
   SET_LOGOUT
 } from '@/store/types/mutation_types'
@@ -30,7 +33,8 @@ const userInSession = () => new Promise((resolve, reject) => {
 
 export default {
   state: {
-    currentUser: null
+    currentUser: null,
+    userDetails: {}
   },
   getters: {},
   actions: {
@@ -45,6 +49,21 @@ export default {
       } catch (err) {
         commit(SET_ERROR, err)
         console.error('error in session.', err)
+      }
+    },
+    async [GET_USER_DETAILS]({ state, commit }) {
+      const { currentUser } = state
+      if (isEmpty(currentUser)) return
+
+      try {
+        currentUserDoc(currentUser).onSnapshot((doc) => {
+          const userDetails = doc.data()
+          if (!isEmpty(userDetails)) {
+            commit(SET_USER_DETAILS, userDetails)
+          }
+        })
+      } catch (err) {
+        console.error('error in get user details', err)
       }
     },
     async [GOOGLE_AUTH]({ commit }) {
@@ -95,6 +114,10 @@ export default {
     [SET_USER](state, user) {
       // eslint-disable-next-line
       state.currentUser = user
+    },
+    [SET_USER_DETAILS](state, userDetails) {
+      // eslint-disable-next-line
+      state.userDetails = userDetails
     },
     [SET_LOGOUT](state) {
       // eslint-disable-next-line

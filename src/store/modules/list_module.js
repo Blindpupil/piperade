@@ -4,6 +4,7 @@ import { listsColRef } from '@/firebase'
 import {
   createList,
   createFullList,
+  parseListRecipes,
   calculateIngredientsByPortion
 } from '@/store/models/List'
 import {
@@ -32,31 +33,11 @@ export default {
   getters: {
     fullLists: (state, getters, rootState) => {
       const { lists } = state
-      const { recipes } = rootState.recipe
+      const { recipesFilteredByPantry } = getters
       const { cupboards } = rootState.pantry
 
       const fullLists = lists.map((list) => {
-        const listRecipes = []
-        let parsedListRecipes = []
-
-        if (!isEmpty(list.recipes)) {
-          list.recipes.forEach((recipe) => {
-            const { id, listPortions } = recipe
-            // find in the Recipes collection the ones with the ids saved in the list
-            const match = recipes.find(r => r.id === id)
-            match.listPortions = listPortions
-            listRecipes.push(match)
-          })
-
-          parsedListRecipes = listRecipes.map((recipe) => {
-            let result = recipe
-            if (!recipe.listPortions) return result
-            if (recipe.portions !== recipe.listPortions) {
-              result = calculateIngredientsByPortion({ recipe, listPortions: recipe.listPortions })
-            }
-            return result
-          })
-        }
+        const parsedListRecipes = parseListRecipes({ list, recipes: recipesFilteredByPantry })
 
         const parsedList = {
           ...list,
@@ -129,33 +110,23 @@ export default {
         console.error(err)
       }
     },
-    [PARSE_LIST_ITEMS]({ commit, rootState }, list) {
+    [PARSE_LIST_ITEMS]({ commit, getters, rootState }, list) {
       const { cupboards } = rootState.pantry
-      const { recipes } = rootState.recipe
-
-      // TODO: this is duplicated in the fullList getter.
-      // Extract it as an exported module function
-      const listRecipes = []
-      let parsedListRecipes = []
-
-      list.recipes.forEach((recipe) => {
-        const { id, listPortions, portions } = recipe
-        // find in the Recipes collection the ones with the ids saved in the list
-        const match = recipes.find(r => r.id === id)
-        if (!listPortions) match.listPortions = portions
-        listRecipes.push(match)
-      })
-
-      parsedListRecipes = listRecipes.map((recipe) => {
-        let result = recipe
-        if (!recipe.listPortions) return result
-        if (recipe.portions !== recipe.listPortions) {
-          result = calculateIngredientsByPortion({ recipe, listPortions: recipe.listPortions })
-        }
-        return result
-      })
 
       const parsedList = createList({ list, cupboards })
+
+      if (isEmpty(list.recipes)) {
+        commit(SET_LIST, {
+          ...parsedList,
+          recipes: [],
+          items: []
+        })
+        return
+      }
+
+      const { recipesFilteredByPantry } = getters
+      const parsedListRecipes = parseListRecipes({ list, recipes: recipesFilteredByPantry })
+
       const parsedListWithRecipes = {
         ...parsedList,
         recipes: parsedListRecipes

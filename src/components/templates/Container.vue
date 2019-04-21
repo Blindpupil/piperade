@@ -1,25 +1,53 @@
 <template>
   <v-app>
-    <v-navigation-drawer clipped fixed v-model="drawer" app>
-      <v-list dense>
-        <v-list-tile>
-          <v-list-tile-action>
-            <v-icon>dashboard</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>Dashboard</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
-        <Settings class="w100">
-          <v-list-tile @click="{}">
-            <v-list-tile-action>
-              <v-icon>settings</v-icon>
-            </v-list-tile-action>
+    <v-navigation-drawer
+      v-model="drawer"
+      clipped fixed
+      app
+    >
+      <v-toolbar flat class="transparent">
+        <v-list class="pa-0">
+          <v-list-tile avatar>
+            <v-list-tile-avatar>
+              <img :src="userDetails.picture">
+            </v-list-tile-avatar>
+
             <v-list-tile-content>
-              <v-list-tile-title>Settings</v-list-tile-title>
+              <v-list-tile-title v-text="userDetails.name"></v-list-tile-title>
             </v-list-tile-content>
           </v-list-tile>
-        </Settings>
+        </v-list>
+      </v-toolbar>
+
+      <v-list>
+        <v-list-group
+          prepend-icon="settings"
+          value="true"
+        >
+          <div slot="activator">
+            <v-list-tile>
+              <v-list-tile-title>Settings</v-list-tile-title>
+            </v-list-tile>
+          </div>
+
+          <IngredientsSuggestions class="w100">
+            <v-list-tile @click="{}">
+              <v-list-tile-action>
+                <v-icon>subject</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-title>Ingredients suggestions</v-list-tile-title>
+            </v-list-tile>
+          </IngredientsSuggestions>
+          <UnitConversions class="w100">
+            <v-list-tile @click="{}">
+              <v-list-tile-action>
+                <v-icon>settings_ethernet</v-icon>
+              </v-list-tile-action>
+              <v-list-tile-title>Unit conversions</v-list-tile-title>
+            </v-list-tile>
+          </UnitConversions>
+        </v-list-group>
+
         <v-list-tile @click="logout">
           <v-list-tile-action>
             <v-icon>power_settings_new</v-icon>
@@ -47,18 +75,29 @@
 </template>
 
 <script>
-import { LOGOUT } from '@/store/types/action_types'
+import { mapState } from 'vuex'
+import { GET_USER_DETAILS, LOGOUT } from '@/store/types/action_types'
 import BottomNav from '@/components/atoms/BottomNav.vue'
-import Settings from '@/components/pages/Settings.vue'
+import IngredientsSuggestions from '@/components/organisms/Settings/IngredientsSuggestions.vue'
+import UnitConversions from '@/components/organisms/Settings/UnitConversions.vue'
 
 export default {
   components: {
     BottomNav,
-    Settings
+    IngredientsSuggestions,
+    UnitConversions
   },
   data: () => ({
     drawer: true
   }),
+  computed: {
+    ...mapState({
+      userDetails: state => state.user.userDetails
+    })
+  },
+  created() {
+    this.$store.dispatch(GET_USER_DETAILS)
+  },
   methods: {
     logout() {
       this.$store.dispatch(LOGOUT)
