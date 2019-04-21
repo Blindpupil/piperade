@@ -81,7 +81,7 @@ export default {
           await recipesColRef(currentUser).add(data)
         }
 
-        const ingredientsList = getIngredientsNamesArray(recipe)
+        const ingredientsList = getIngredientsNamesArray(data)
 
         dispatch(WRITE_INGREDIENTS, { ingredientsList })
 

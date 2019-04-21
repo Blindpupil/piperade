@@ -39,6 +39,7 @@
                   <span class="text-brand-gray" v-text="durationText(recipe.duration)">
                   </span>
                 </div>
+                <!-- COMING SOON -->
                 <!-- <div>
                   <v-icon class="small-icon">payment</v-icon>
                   <span class="text-brand-gray">
@@ -135,12 +136,12 @@
                 </v-list>
               </v-menu>
             </v-layout>
-
-            <v-layout justify-end px-2>
+            <!-- COMING SOON -->
+            <!-- <v-layout justify-end px-2>
               <v-icon class="medium-icon">
                 share
               </v-icon>
-            </v-layout>
+            </v-layout> -->
           </v-card-actions>
         </v-card>
       </div>
@@ -277,7 +278,8 @@ export default {
       const total = ingredients.length
       return `${ingredientsObtained} / ${total}`
     },
-    setRecipe(recipe) {
+    setRecipe({ id }) {
+      const recipe = this.recipes.find(r => r.id === id)
       this.$store.commit(SET_RECIPE, recipe)
     }
   }

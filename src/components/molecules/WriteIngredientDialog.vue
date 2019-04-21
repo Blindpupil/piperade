@@ -80,7 +80,7 @@ export default {
       v => v.length <= 20 || 'Ingredient name must be less than 20 characters'
     ],
     quantityRules: [
-      v => v > 0 || 'Gotta be a number bigger than 0'
+      v => (v > 0 || v === '') || 'Gotta be a number bigger than 0'
     ],
     validIngredient: false
   }),
@@ -145,6 +145,7 @@ export default {
     validateIngredient() {
       if (this.$refs.writeIngredientForm.validate()) {
         this.snackbar = true
+        const oldKey = this.ingredient ? this.ingredient.ingredient.toLowerCase() : ''
 
         const ingredients = Object.assign({}, this.recipe.ingredients)
 
@@ -156,7 +157,6 @@ export default {
           unit: this.data.unit ? this.data.unit : unit
         }
 
-        const oldKey = this.ingredient ? this.ingredient.ingredient.toLowerCase() : false
         const key = this.data.ingredient ? this.data.ingredient.toLowerCase() : oldKey
 
         delete ingredients[oldKey]

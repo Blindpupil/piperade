@@ -19,12 +19,12 @@
             ></v-text-field>
           </v-flex>
           <v-flex>
-            <v-combobox
+            <v-select
               v-model="unit"
               :items="unitsList"
               name="unit"
               label="unit"
-            ></v-combobox>
+            ></v-select>
           </v-flex>
           <v-flex shrink>
             <v-icon @click="removeItem">
