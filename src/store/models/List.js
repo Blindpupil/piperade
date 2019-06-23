@@ -95,13 +95,14 @@ export function parseListRecipes({ list = {}, recipes = [] } = {}) {
     // find in the Recipes collection the ones with the ids saved in the list
     const match = recipes.find(r => r.id === id)
     // copy the listPortions from the list to the recipe found
-    match.listPortions = listPortions
+    if (match) match.listPortions = listPortions
+
     listRecipes.push(match)
   })
 
   return listRecipes.map((recipe) => {
     let result = recipe
-    if (!recipe.listPortions) return result // recipe doesn't need recalculation
+    if (recipe && !recipe.listPortions) return result // recipe doesn't need recalculation
 
     if (recipe.portions !== recipe.listPortions) {
       result = calculateIngredientsByPortion({ recipe, listPortions: recipe.listPortions })
@@ -122,6 +123,11 @@ export function createFullList({ list = {}, cupboards = [] } = {}) {
     items = createItemsFromRecipes({ recipes, cupboards })
     Object.assign(createdList, { items })
   }
+
+  console.log('created list', {
+    ...list,
+    ...createdList
+  })
 
   return {
     ...list,

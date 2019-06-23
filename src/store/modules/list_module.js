@@ -44,7 +44,9 @@ export default {
           recipes: parsedListRecipes
         }
 
-        return createFullList({ list: parsedList, cupboards })
+        const fullList = createFullList({ list: parsedList, cupboards })
+
+        return fullList
       })
 
       return fullLists
@@ -53,6 +55,8 @@ export default {
   actions: {
     async [GET_LISTS]({ commit, rootState }) {
       const { currentUser } = rootState.user
+      const { recipes } = rootState.recipe
+
       commit(SET_LOADING, true)
       try {
         await listsColRef(currentUser).orderBy('edited', 'desc').onSnapshot((docs) => {
@@ -64,6 +68,9 @@ export default {
               lists.push({ ...data, id })
             }
           })
+
+          // Populate lists recipes IDs with recipe objects
+          console.log({ recipes })
 
           if (!isEmpty(lists)) {
             commit(SET_LISTS, lists)
