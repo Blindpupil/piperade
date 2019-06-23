@@ -55,7 +55,6 @@ export default {
   actions: {
     async [GET_LISTS]({ commit, rootState }) {
       const { currentUser } = rootState.user
-      const { recipes } = rootState.recipe
 
       commit(SET_LOADING, true)
       try {
@@ -68,9 +67,6 @@ export default {
               lists.push({ ...data, id })
             }
           })
-
-          // Populate lists recipes IDs with recipe objects
-          console.log({ recipes })
 
           if (!isEmpty(lists)) {
             commit(SET_LISTS, lists)
