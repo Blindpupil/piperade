@@ -1,8 +1,4 @@
-import {
-  flatten,
-  isEmpty,
-  trim
-} from 'lodash-es'
+import { flatten, isEmpty, trim } from 'lodash-es'
 
 const sumIngredientQuantities = (ingredients = []) => {
   const sum = []
@@ -58,7 +54,10 @@ export function createItemsFromRecipes({ recipes = [], cupboards = [] } = {}) {
 
   const ingredients = sumIngredientQuantities(flatten(allIngredients))
 
-  const parsedIngredients = filterByIngredientsInCupboards({ ingredients, cupboards })
+  const parsedIngredients = filterByIngredientsInCupboards({
+    ingredients,
+    cupboards
+  })
 
   return parsedIngredients
 }
@@ -105,7 +104,10 @@ export function parseListRecipes({ list = {}, recipes = [] } = {}) {
     if (recipe && !recipe.listPortions) return result // recipe doesn't need recalculation
 
     if (recipe.portions !== recipe.listPortions) {
-      result = calculateIngredientsByPortion({ recipe, listPortions: recipe.listPortions })
+      result = calculateIngredientsByPortion({
+        recipe,
+        listPortions: recipe.listPortions
+      })
     }
 
     return result
@@ -120,14 +122,12 @@ export function createFullList({ list = {}, cupboards = [] } = {}) {
   const createdList = {}
 
   if (!isEmpty(recipes)) {
-    items = createItemsFromRecipes({ recipes, cupboards })
+    items = createItemsFromRecipes({
+      recipes,
+      cupboards
+    })
     Object.assign(createdList, { items })
   }
-
-  console.log('created list', {
-    ...list,
-    ...createdList
-  })
 
   return {
     ...list,
@@ -144,10 +144,16 @@ export function createList({ list = {}, cupboards = [] } = {}) {
   const createdList = {}
 
   if (!isEmpty(recipes)) {
-    items = createItemsFromRecipes({ recipes, cupboards })
+    items = createItemsFromRecipes({
+      recipes,
+      cupboards
+    })
     Object.assign(createdList, { items })
 
-    const fbRecipes = recipes.map(recipe => ({ id: recipe.id, listPortions: recipe.portions }))
+    const fbRecipes = recipes.map(recipe => ({
+      id: recipe.id,
+      listPortions: recipe.portions
+    }))
     Object.assign(createdList, { recipes: fbRecipes })
   }
 
