@@ -11,7 +11,7 @@
   "dependencies": {
     "convert-units": "^2.3.4",
     "firebase": "^5.7.2",
-    "lodash-es": "^4.17.11",
+    "lodash-es": "^4.17.21",
     "vue": "^2.5.21",
     "vue-router": "^3.0.1",
     "vuetify": "^1.5.2",
